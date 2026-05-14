@@ -38,12 +38,14 @@ function AccountPage() {
         <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
           <Calendar className="h-3.5 w-3.5" /> Due {billing.due}
         </p>
-        <button
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ y: -2 }}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold text-primary-foreground"
           style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-float)" }}
         >
           Pay Now <ArrowRight className="h-4 w-4" />
-        </button>
+        </motion.button>
       </section>
 
       {/* Breakdown */}
