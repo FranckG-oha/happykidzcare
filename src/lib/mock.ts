@@ -6,8 +6,11 @@ import blocks from "@/assets/gallery-blocks.jpg";
 import outdoor from "@/assets/gallery-outdoor.jpg";
 import story from "@/assets/gallery-story.jpg";
 import risotto from "@/assets/meal-risotto.jpg";
+import sophie from "@/assets/contact-sophie.jpg";
+import mohamed from "@/assets/contact-mohamed.jpg";
+import drawingLeo from "@/assets/drawing-leo.jpg";
 
-export const assets = { lea, noah, marie, painting, blocks, outdoor, story, risotto };
+export const assets = { lea, noah, marie, painting, blocks, outdoor, story, risotto, sophie, mohamed, drawingLeo };
 
 export const parent = { name: "Marie", avatar: marie };
 
