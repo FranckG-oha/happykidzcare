@@ -1,0 +1,118 @@
+import lea from "@/assets/child-lea.jpg";
+import noah from "@/assets/child-noah.jpg";
+import marie from "@/assets/teacher-marie.jpg";
+import painting from "@/assets/gallery-painting.jpg";
+import blocks from "@/assets/gallery-blocks.jpg";
+import outdoor from "@/assets/gallery-outdoor.jpg";
+import story from "@/assets/gallery-story.jpg";
+import risotto from "@/assets/meal-risotto.jpg";
+
+export const assets = { lea, noah, marie, painting, blocks, outdoor, story, risotto };
+
+export const parent = { name: "Marie", avatar: marie };
+
+export type Child = {
+  id: string;
+  name: string;
+  cycle: "CYCLE_0" | "CYCLE_1";
+  room: string;
+  avatar: string;
+  status: "Present" | "Absent" | "Picked up";
+  mood: string;
+};
+
+export const children: Child[] = [
+  { id: "lea", name: "Léa", cycle: "CYCLE_0", room: "Sunflower Room", avatar: lea, status: "Present", mood: "Happy & Playful" },
+  { id: "noah", name: "Noah", cycle: "CYCLE_1", room: "Butterfly Class", avatar: noah, status: "Present", mood: "Curious" },
+];
+
+export const todayTimeline = [
+  { id: 1, time: "10:30 AM", tag: "ART TIME", icon: "palette", title: "Finger Painting Fun!", body: "Léa enjoyed finger painting today. She mixed colors to create a bright sunshine.", image: painting },
+  { id: 2, time: "12:30 PM", tag: "LUNCH", icon: "utensils", title: "Ate all of her vegetables!", body: "Léa really enjoyed the roasted carrots today.", image: null },
+  { id: 3, time: "2:00 PM", tag: "IMPORTANT", icon: "alert", title: "Please pack extra wipes tomorrow.", body: "We have a scheduled messy play activity.", important: true, image: null },
+];
+
+export const gallery = [
+  { id: 1, src: painting, child: "Léa", tag: "Art" },
+  { id: 2, src: outdoor, child: "Noah", tag: "Outdoor" },
+  { id: 3, src: story, children: ["Léa", "Noah"], tag: "Story Time" },
+  { id: 4, src: blocks, child: "Noah", tag: "Building" },
+];
+
+export const meals = [
+  { day: "MON", date: "23", title: "Spaghetti Bolognese", body: "Whole wheat pasta with hidden vegetable sauce.", tags: ["Gluten", "Nuts (Léa's Allergy)"], snack: "Fresh Fruit & Yogurt", today: false },
+  { day: "TUE", date: "24", title: "Chicken Risotto", body: "With creamed spinach and sweet potatoes.", tags: ["Dairy (Allergy)", "Soy Free"], snack: "Fresh Fruit Medley", today: true },
+  { day: "WED", date: "25", title: "Turkey Meatballs", body: "Served with fluffy couscous and roasted zucchini.", tags: ["Gluten", "Egg"], snack: "Oat Clusters", today: false },
+  { day: "THU", date: "26", title: "Mild Vegetable Korma", body: "Fragrant basmati rice with cauliflower & peas.", tags: ["Dairy Free", "Vegan Option"], snack: "Mini Cornbread", today: false },
+  { day: "FRI", date: "27", title: "Baked Salmon", body: "With herbed quinoa and steamed broccoli.", tags: ["Fish", "Omega-3"], snack: "Apple Slices", today: false },
+];
+
+export const messages = [
+  { id: 1, from: "Mme Johnson", role: "Lead Educator · Sunflower Room", avatar: marie, preview: "Léa was wonderful during story time today — she even helped pass out books.", time: "2h", unread: true },
+  { id: 2, from: "Director — Anna Bell", role: "Digital Sanctuary", avatar: marie, preview: "Reminder: Spring Fair next Friday. RSVP by Wednesday please.", time: "Yesterday", unread: true },
+  { id: 3, from: "Nurse Camille", role: "Health & Wellness", avatar: marie, preview: "Vaccination form for Noah is due before April 30.", time: "2d", unread: false },
+  { id: 4, from: "Accounting", role: "Billing", avatar: marie, preview: "Your April invoice of €320 is now available.", time: "5d", unread: false },
+];
+
+export const calendar = [
+  { date: "Apr 23", title: "Spring Picnic", tag: "Event", color: "primary" },
+  { date: "Apr 25", title: "Parent-Teacher Conference", tag: "Meeting", color: "secondary" },
+  { date: "Apr 30", title: "April Tuition Due", tag: "Payment", color: "warning" },
+  { date: "May 02", title: "Vaccination Form Deadline", tag: "Health", color: "destructive" },
+  { date: "May 10", title: "Mother's Day Workshop", tag: "Workshop", color: "primary" },
+];
+
+export const milestones = {
+  child: children[0],
+  period: "Q1 2025 Progress Report",
+  overall: 94,
+  headline: "Spring Growth & Discovery.",
+  intro: "Léa has shown remarkable curiosity this quarter. Her transition to more independent tasks demonstrates a growing confidence in both her physical surroundings and linguistic expression.",
+  domains: [
+    {
+      n: "01", icon: "footprints", name: "Motor Development",
+      items: [
+        { title: "Walks independently", body: "Core mobility milestones", status: "Achieved" as const },
+        { title: "Throws ball", body: "Hand-eye coordination", status: "Emerging" as const },
+      ],
+    },
+    {
+      n: "02", icon: "message-circle", name: "Language Development",
+      items: [
+        { title: "Points to pictures", body: "Receptive language skills", status: "Achieved" as const },
+        { title: "Says 10+ words", body: "Expressive vocabulary", status: "Developing" as const },
+      ],
+    },
+    {
+      n: "03", icon: "users", name: "Social & Emotional",
+      items: [
+        { title: "Plays alongside peers", body: "Parallel play stage", status: "Achieved" as const },
+        { title: "Names emotions", body: "Self-regulation foundations", status: "Developing" as const },
+      ],
+    },
+  ],
+  reflection: "\"Léa is a joy to have in the classroom. This quarter, her social interactions have blossomed; she is often seen encouraging her peers during group play. Her motor skills are advancing ahead of schedule, particularly her balance and confidence in navigating new obstacles.\"",
+  teacher: { name: "Mme Johnson", role: "Lead Caregiver & Educator", avatar: marie },
+};
+
+export const billing = {
+  invoice: 320,
+  due: "April 30",
+  breakdown: [
+    {
+      child: "Noah", program: "Pre-K Program", avatar: noah,
+      lines: [{ label: "Base Tuition", amount: 250 }, { label: "Meals (April)", amount: 40 }],
+      subtotal: 290,
+    },
+    {
+      child: "Léa", program: "Nursery Care", avatar: lea,
+      lines: [{ label: "Art Supplies", amount: 15 }, { label: "Workshop Fee", amount: 15 }],
+      subtotal: 30,
+    },
+  ],
+  history: [
+    { label: "March Tuition", date: "Paid Mar 2, 2025", amount: 305 },
+    { label: "Spring Field Trip Fee", date: "Paid Feb 15, 2025", amount: 25 },
+    { label: "February Tuition", date: "Paid Feb 1, 2025", amount: 280 },
+  ],
+};
