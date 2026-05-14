@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
+import { Route as TabsNotificationsRouteImport } from './routes/_tabs.notifications'
 import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
 import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
 import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
@@ -29,6 +30,11 @@ const TabsIndexRoute = TabsIndexRouteImport.update({
 const TabsUpdatesRoute = TabsUpdatesRouteImport.update({
   id: '/updates',
   path: '/updates',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsNotificationsRoute = TabsNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => TabsRoute,
 } as any)
 const TabsMessagesRoute = TabsMessagesRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
+  '/notifications': typeof TabsNotificationsRoute
   '/updates': typeof TabsUpdatesRoute
 }
 export interface FileRoutesByTo {
@@ -65,6 +72,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
+  '/notifications': typeof TabsNotificationsRoute
   '/updates': typeof TabsUpdatesRoute
   '/': typeof TabsIndexRoute
 }
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
   '/_tabs/messages': typeof TabsMessagesRoute
+  '/_tabs/notifications': typeof TabsNotificationsRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
   '/_tabs/': typeof TabsIndexRoute
 }
@@ -86,9 +95,17 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/children'
     | '/messages'
+    | '/notifications'
     | '/updates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/account' | '/calendar' | '/children' | '/messages' | '/updates' | '/'
+  to:
+    | '/account'
+    | '/calendar'
+    | '/children'
+    | '/messages'
+    | '/notifications'
+    | '/updates'
+    | '/'
   id:
     | '__root__'
     | '/_tabs'
@@ -96,6 +113,7 @@ export interface FileRouteTypes {
     | '/_tabs/calendar'
     | '/_tabs/children'
     | '/_tabs/messages'
+    | '/_tabs/notifications'
     | '/_tabs/updates'
     | '/_tabs/'
   fileRoutesById: FileRoutesById
@@ -125,6 +143,13 @@ declare module '@tanstack/react-router' {
       path: '/updates'
       fullPath: '/updates'
       preLoaderRoute: typeof TabsUpdatesRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/notifications': {
+      id: '/_tabs/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof TabsNotificationsRouteImport
       parentRoute: typeof TabsRoute
     }
     '/_tabs/messages': {
@@ -163,6 +188,7 @@ interface TabsRouteChildren {
   TabsCalendarRoute: typeof TabsCalendarRoute
   TabsChildrenRoute: typeof TabsChildrenRoute
   TabsMessagesRoute: typeof TabsMessagesRoute
+  TabsNotificationsRoute: typeof TabsNotificationsRoute
   TabsUpdatesRoute: typeof TabsUpdatesRoute
   TabsIndexRoute: typeof TabsIndexRoute
 }
@@ -172,6 +198,7 @@ const TabsRouteChildren: TabsRouteChildren = {
   TabsCalendarRoute: TabsCalendarRoute,
   TabsChildrenRoute: TabsChildrenRoute,
   TabsMessagesRoute: TabsMessagesRoute,
+  TabsNotificationsRoute: TabsNotificationsRoute,
   TabsUpdatesRoute: TabsUpdatesRoute,
   TabsIndexRoute: TabsIndexRoute,
 }
@@ -184,3 +211,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
