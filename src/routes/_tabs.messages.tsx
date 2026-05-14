@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { Search, Edit3 } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { messages } from "@/lib/mock";
@@ -39,9 +40,17 @@ function MessagesPage() {
       </div>
 
       <ul className="mt-4 space-y-1 px-3">
-        {messages.map((m) => (
-          <li key={m.id}>
-            <button className="flex w-full items-start gap-3 rounded-3xl px-3 py-3 text-left transition-colors hover:bg-surface-low">
+        {messages.map((m, i) => (
+          <motion.li
+            key={m.id}
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Link
+              to="/conversation"
+              className="flex w-full items-start gap-3 rounded-3xl px-3 py-3 text-left transition-colors hover:bg-surface-low active:scale-[0.98]"
+            >
               <img src={m.avatar} alt="" width={48} height={48} className="h-12 w-12 rounded-2xl object-cover" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline justify-between gap-2">
@@ -55,9 +64,16 @@ function MessagesPage() {
                   {m.preview}
                 </p>
               </div>
-              {m.unread && <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary" />}
-            </button>
-          </li>
+              {m.unread && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [0, 1.4, 1] }}
+                  transition={{ delay: 0.3 + i * 0.06, duration: 0.5 }}
+                  className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary"
+                />
+              )}
+            </Link>
+          </motion.li>
         ))}
       </ul>
     </>

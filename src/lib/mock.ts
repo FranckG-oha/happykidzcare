@@ -6,8 +6,11 @@ import blocks from "@/assets/gallery-blocks.jpg";
 import outdoor from "@/assets/gallery-outdoor.jpg";
 import story from "@/assets/gallery-story.jpg";
 import risotto from "@/assets/meal-risotto.jpg";
+import sophie from "@/assets/contact-sophie.jpg";
+import mohamed from "@/assets/contact-mohamed.jpg";
+import drawingLeo from "@/assets/drawing-leo.jpg";
 
-export const assets = { lea, noah, marie, painting, blocks, outdoor, story, risotto };
+export const assets = { lea, noah, marie, painting, blocks, outdoor, story, risotto, sophie, mohamed, drawingLeo };
 
 export const parent = { name: "Marie", avatar: marie };
 
@@ -116,3 +119,39 @@ export const billing = {
     { label: "February Tuition", date: "Paid Feb 1, 2025", amount: 280 },
   ],
 };
+
+export type NotifKind = "report" | "message" | "event" | "schedule" | "payment";
+export const notifications = [
+  { id: 1, kind: "report" as NotifKind, group: "Today", time: "17:00", title: "Daily report ready", body: "Léa's daily report is available. She had a wonderful afternoon!", actor: marie, action: "View report", unread: true },
+  { id: 2, kind: "message" as NotifKind, group: "Today", time: "11:00", title: "New message", body: "Mme Johnson: \"Please bring spare clothes for Léa tomorrow, thank you!\"", actor: marie, action: "Reply", accent: "secondary" as const, unread: true },
+  { id: 3, kind: "event" as NotifKind, group: "Yesterday", time: "14:30", title: "Parent-Teacher meeting", body: "Mid-semester meeting is on Thursday April 15 at 6 PM. Please confirm.", rsvp: true },
+  { id: 4, kind: "schedule" as NotifKind, group: "Yesterday", time: "09:00", title: "Weekly programme published", body: "Next week's activities are live. Theme: Colours of Autumn." },
+  { id: 5, kind: "payment" as NotifKind, group: "This week", time: "Mon", title: "April invoice issued", body: "Your April tuition of €320 is due in 5 days." },
+];
+
+export const authorizedContacts = [
+  { id: "sophie", name: "Sophie", relation: "Aunt", avatar: sophie, code: "DS-7421" },
+  { id: "mohamed", name: "Mohamed", relation: "Grandfather", avatar: mohamed, code: "DS-3098" },
+];
+
+export const conversation = {
+  educator: { name: "Mme Johnson", role: "Sunflower Class Lead Educator", avatar: marie, online: true },
+  thread: [
+    { id: 1, who: "them" as const, time: "02:14 PM", text: "Hello! I wanted to share this beautiful drawing that Leo made during the morning session. He was so focused on the details of the garden today!", image: drawingLeo, fileName: "Leo_Garden.jpg" },
+    { id: 2, who: "me" as const, time: "02:30 PM", text: "It looks wonderful! Thank you so much for sharing these moments. He talked about the \"giant sunflowers\" all the way home yesterday." },
+  ],
+  typing: true,
+};
+
+export const absenceReasons = [
+  { id: "sick", label: "Sick", icon: "heart-pulse" },
+  { id: "family", label: "Family", icon: "users" },
+  { id: "vacation", label: "Vacation", icon: "palmtree" },
+  { id: "other", label: "Other", icon: "more-horizontal" },
+];
+
+export const feedbackQuestions = [
+  { id: "01", q: "How satisfied are you with school communication?", type: "choice" as const, options: ["Very Satisfied", "Somewhat Satisfied", "Neutral / Not Sure", "Dissatisfied"] },
+  { id: "02", q: "Rate the quality of activities", type: "rating" as const },
+  { id: "03", q: "Any suggestions?", type: "text" as const },
+];
