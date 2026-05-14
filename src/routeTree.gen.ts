@@ -10,32 +10,98 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TabsRouteImport } from './routes/_tabs'
+import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
+import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
+import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
+import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
+import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
+import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
 const TabsRoute = TabsRouteImport.update({
   id: '/_tabs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TabsIndexRoute = TabsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsUpdatesRoute = TabsUpdatesRouteImport.update({
+  id: '/updates',
+  path: '/updates',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsMessagesRoute = TabsMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsChildrenRoute = TabsChildrenRouteImport.update({
+  id: '/children',
+  path: '/children',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsCalendarRoute = TabsCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsAccountRoute = TabsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => TabsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof TabsRoute
+  '/': typeof TabsIndexRoute
+  '/account': typeof TabsAccountRoute
+  '/calendar': typeof TabsCalendarRoute
+  '/children': typeof TabsChildrenRoute
+  '/messages': typeof TabsMessagesRoute
+  '/updates': typeof TabsUpdatesRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof TabsRoute
+  '/account': typeof TabsAccountRoute
+  '/calendar': typeof TabsCalendarRoute
+  '/children': typeof TabsChildrenRoute
+  '/messages': typeof TabsMessagesRoute
+  '/updates': typeof TabsUpdatesRoute
+  '/': typeof TabsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_tabs': typeof TabsRoute
+  '/_tabs': typeof TabsRouteWithChildren
+  '/_tabs/account': typeof TabsAccountRoute
+  '/_tabs/calendar': typeof TabsCalendarRoute
+  '/_tabs/children': typeof TabsChildrenRoute
+  '/_tabs/messages': typeof TabsMessagesRoute
+  '/_tabs/updates': typeof TabsUpdatesRoute
+  '/_tabs/': typeof TabsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/calendar'
+    | '/children'
+    | '/messages'
+    | '/updates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_tabs'
+  to: '/account' | '/calendar' | '/children' | '/messages' | '/updates' | '/'
+  id:
+    | '__root__'
+    | '/_tabs'
+    | '/_tabs/account'
+    | '/_tabs/calendar'
+    | '/_tabs/children'
+    | '/_tabs/messages'
+    | '/_tabs/updates'
+    | '/_tabs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  TabsRoute: typeof TabsRoute
+  TabsRoute: typeof TabsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -47,12 +113,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_tabs/': {
+      id: '/_tabs/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof TabsIndexRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/updates': {
+      id: '/_tabs/updates'
+      path: '/updates'
+      fullPath: '/updates'
+      preLoaderRoute: typeof TabsUpdatesRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/messages': {
+      id: '/_tabs/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof TabsMessagesRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/children': {
+      id: '/_tabs/children'
+      path: '/children'
+      fullPath: '/children'
+      preLoaderRoute: typeof TabsChildrenRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/calendar': {
+      id: '/_tabs/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof TabsCalendarRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/account': {
+      id: '/_tabs/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof TabsAccountRouteImport
+      parentRoute: typeof TabsRoute
+    }
   }
 }
 
+interface TabsRouteChildren {
+  TabsAccountRoute: typeof TabsAccountRoute
+  TabsCalendarRoute: typeof TabsCalendarRoute
+  TabsChildrenRoute: typeof TabsChildrenRoute
+  TabsMessagesRoute: typeof TabsMessagesRoute
+  TabsUpdatesRoute: typeof TabsUpdatesRoute
+  TabsIndexRoute: typeof TabsIndexRoute
+}
+
+const TabsRouteChildren: TabsRouteChildren = {
+  TabsAccountRoute: TabsAccountRoute,
+  TabsCalendarRoute: TabsCalendarRoute,
+  TabsChildrenRoute: TabsChildrenRoute,
+  TabsMessagesRoute: TabsMessagesRoute,
+  TabsUpdatesRoute: TabsUpdatesRoute,
+  TabsIndexRoute: TabsIndexRoute,
+}
+
+const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  TabsRoute: TabsRoute,
+  TabsRoute: TabsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
