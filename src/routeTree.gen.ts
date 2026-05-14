@@ -21,6 +21,13 @@ import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
 import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 import { Route as TabsAbsenceRouteImport } from './routes/_tabs.absence'
+import { Route as TabsAccountIndexRouteImport } from './routes/_tabs.account.index'
+import { Route as TabsAccountSecurityRouteImport } from './routes/_tabs.account.security'
+import { Route as TabsAccountProfileRouteImport } from './routes/_tabs.account.profile'
+import { Route as TabsAccountPreferencesRouteImport } from './routes/_tabs.account.preferences'
+import { Route as TabsAccountPaymentsRouteImport } from './routes/_tabs.account.payments'
+import { Route as TabsAccountHelpRouteImport } from './routes/_tabs.account.help'
+import { Route as TabsAccountChildrenRouteImport } from './routes/_tabs.account.children'
 
 const ConversationRoute = ConversationRouteImport.update({
   id: '/conversation',
@@ -81,12 +88,47 @@ const TabsAbsenceRoute = TabsAbsenceRouteImport.update({
   path: '/absence',
   getParentRoute: () => TabsRoute,
 } as any)
+const TabsAccountIndexRoute = TabsAccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
+const TabsAccountSecurityRoute = TabsAccountSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
+const TabsAccountProfileRoute = TabsAccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
+const TabsAccountPreferencesRoute = TabsAccountPreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
+const TabsAccountPaymentsRoute = TabsAccountPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
+const TabsAccountHelpRoute = TabsAccountHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
+const TabsAccountChildrenRoute = TabsAccountChildrenRouteImport.update({
+  id: '/children',
+  path: '/children',
+  getParentRoute: () => TabsAccountRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/conversation': typeof ConversationRoute
   '/absence': typeof TabsAbsenceRoute
-  '/account': typeof TabsAccountRoute
+  '/account': typeof TabsAccountRouteWithChildren
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/feedback': typeof TabsFeedbackRoute
@@ -94,11 +136,17 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof TabsNotificationsRoute
   '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
+  '/account/children': typeof TabsAccountChildrenRoute
+  '/account/help': typeof TabsAccountHelpRoute
+  '/account/payments': typeof TabsAccountPaymentsRoute
+  '/account/preferences': typeof TabsAccountPreferencesRoute
+  '/account/profile': typeof TabsAccountProfileRoute
+  '/account/security': typeof TabsAccountSecurityRoute
+  '/account/': typeof TabsAccountIndexRoute
 }
 export interface FileRoutesByTo {
   '/conversation': typeof ConversationRoute
   '/absence': typeof TabsAbsenceRoute
-  '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/feedback': typeof TabsFeedbackRoute
@@ -107,13 +155,20 @@ export interface FileRoutesByTo {
   '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
   '/': typeof TabsIndexRoute
+  '/account/children': typeof TabsAccountChildrenRoute
+  '/account/help': typeof TabsAccountHelpRoute
+  '/account/payments': typeof TabsAccountPaymentsRoute
+  '/account/preferences': typeof TabsAccountPreferencesRoute
+  '/account/profile': typeof TabsAccountProfileRoute
+  '/account/security': typeof TabsAccountSecurityRoute
+  '/account': typeof TabsAccountIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
   '/conversation': typeof ConversationRoute
   '/_tabs/absence': typeof TabsAbsenceRoute
-  '/_tabs/account': typeof TabsAccountRoute
+  '/_tabs/account': typeof TabsAccountRouteWithChildren
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
   '/_tabs/feedback': typeof TabsFeedbackRoute
@@ -122,6 +177,13 @@ export interface FileRoutesById {
   '/_tabs/security': typeof TabsSecurityRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
   '/_tabs/': typeof TabsIndexRoute
+  '/_tabs/account/children': typeof TabsAccountChildrenRoute
+  '/_tabs/account/help': typeof TabsAccountHelpRoute
+  '/_tabs/account/payments': typeof TabsAccountPaymentsRoute
+  '/_tabs/account/preferences': typeof TabsAccountPreferencesRoute
+  '/_tabs/account/profile': typeof TabsAccountProfileRoute
+  '/_tabs/account/security': typeof TabsAccountSecurityRoute
+  '/_tabs/account/': typeof TabsAccountIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,11 +199,17 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/security'
     | '/updates'
+    | '/account/children'
+    | '/account/help'
+    | '/account/payments'
+    | '/account/preferences'
+    | '/account/profile'
+    | '/account/security'
+    | '/account/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/conversation'
     | '/absence'
-    | '/account'
     | '/calendar'
     | '/children'
     | '/feedback'
@@ -150,6 +218,13 @@ export interface FileRouteTypes {
     | '/security'
     | '/updates'
     | '/'
+    | '/account/children'
+    | '/account/help'
+    | '/account/payments'
+    | '/account/preferences'
+    | '/account/profile'
+    | '/account/security'
+    | '/account'
   id:
     | '__root__'
     | '/_tabs'
@@ -164,6 +239,13 @@ export interface FileRouteTypes {
     | '/_tabs/security'
     | '/_tabs/updates'
     | '/_tabs/'
+    | '/_tabs/account/children'
+    | '/_tabs/account/help'
+    | '/_tabs/account/payments'
+    | '/_tabs/account/preferences'
+    | '/_tabs/account/profile'
+    | '/_tabs/account/security'
+    | '/_tabs/account/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -257,12 +339,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsAbsenceRouteImport
       parentRoute: typeof TabsRoute
     }
+    '/_tabs/account/': {
+      id: '/_tabs/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof TabsAccountIndexRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
+    '/_tabs/account/security': {
+      id: '/_tabs/account/security'
+      path: '/security'
+      fullPath: '/account/security'
+      preLoaderRoute: typeof TabsAccountSecurityRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
+    '/_tabs/account/profile': {
+      id: '/_tabs/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof TabsAccountProfileRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
+    '/_tabs/account/preferences': {
+      id: '/_tabs/account/preferences'
+      path: '/preferences'
+      fullPath: '/account/preferences'
+      preLoaderRoute: typeof TabsAccountPreferencesRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
+    '/_tabs/account/payments': {
+      id: '/_tabs/account/payments'
+      path: '/payments'
+      fullPath: '/account/payments'
+      preLoaderRoute: typeof TabsAccountPaymentsRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
+    '/_tabs/account/help': {
+      id: '/_tabs/account/help'
+      path: '/help'
+      fullPath: '/account/help'
+      preLoaderRoute: typeof TabsAccountHelpRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
+    '/_tabs/account/children': {
+      id: '/_tabs/account/children'
+      path: '/children'
+      fullPath: '/account/children'
+      preLoaderRoute: typeof TabsAccountChildrenRouteImport
+      parentRoute: typeof TabsAccountRoute
+    }
   }
 }
 
+interface TabsAccountRouteChildren {
+  TabsAccountChildrenRoute: typeof TabsAccountChildrenRoute
+  TabsAccountHelpRoute: typeof TabsAccountHelpRoute
+  TabsAccountPaymentsRoute: typeof TabsAccountPaymentsRoute
+  TabsAccountPreferencesRoute: typeof TabsAccountPreferencesRoute
+  TabsAccountProfileRoute: typeof TabsAccountProfileRoute
+  TabsAccountSecurityRoute: typeof TabsAccountSecurityRoute
+  TabsAccountIndexRoute: typeof TabsAccountIndexRoute
+}
+
+const TabsAccountRouteChildren: TabsAccountRouteChildren = {
+  TabsAccountChildrenRoute: TabsAccountChildrenRoute,
+  TabsAccountHelpRoute: TabsAccountHelpRoute,
+  TabsAccountPaymentsRoute: TabsAccountPaymentsRoute,
+  TabsAccountPreferencesRoute: TabsAccountPreferencesRoute,
+  TabsAccountProfileRoute: TabsAccountProfileRoute,
+  TabsAccountSecurityRoute: TabsAccountSecurityRoute,
+  TabsAccountIndexRoute: TabsAccountIndexRoute,
+}
+
+const TabsAccountRouteWithChildren = TabsAccountRoute._addFileChildren(
+  TabsAccountRouteChildren,
+)
+
 interface TabsRouteChildren {
   TabsAbsenceRoute: typeof TabsAbsenceRoute
-  TabsAccountRoute: typeof TabsAccountRoute
+  TabsAccountRoute: typeof TabsAccountRouteWithChildren
   TabsCalendarRoute: typeof TabsCalendarRoute
   TabsChildrenRoute: typeof TabsChildrenRoute
   TabsFeedbackRoute: typeof TabsFeedbackRoute
@@ -275,7 +430,7 @@ interface TabsRouteChildren {
 
 const TabsRouteChildren: TabsRouteChildren = {
   TabsAbsenceRoute: TabsAbsenceRoute,
-  TabsAccountRoute: TabsAccountRoute,
+  TabsAccountRoute: TabsAccountRouteWithChildren,
   TabsCalendarRoute: TabsCalendarRoute,
   TabsChildrenRoute: TabsChildrenRoute,
   TabsFeedbackRoute: TabsFeedbackRoute,
