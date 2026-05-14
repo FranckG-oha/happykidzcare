@@ -28,7 +28,7 @@ export function BottomNav() {
           return (
             <Link
               key={to}
-              to={to}
+              to={to as never}
               className="group flex flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-1.5 transition-colors"
             >
               <span
