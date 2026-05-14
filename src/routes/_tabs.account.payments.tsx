@@ -4,7 +4,7 @@ import { ArrowRight, Calendar, Check, ChevronRight, FileText, MessageSquare, Set
 import { AppHeader } from "@/components/AppHeader";
 import { billing, parent } from "@/lib/mock";
 
-export const Route = createFileRoute("/_tabs/account")({
+export const Route = createFileRoute("/_tabs/account/payments")({
   head: () => ({
     meta: [
       { title: "Account — Digital Sanctuary" },

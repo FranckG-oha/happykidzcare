@@ -19,8 +19,8 @@ import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
 import { Route as TabsFeedbackRouteImport } from './routes/_tabs.feedback'
 import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
 import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
-import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 import { Route as TabsAbsenceRouteImport } from './routes/_tabs.absence'
+import { Route as TabsAccountPaymentsRouteImport } from './routes/_tabs.account.payments'
 
 const ConversationRoute = ConversationRouteImport.update({
   id: '/conversation',
@@ -71,14 +71,14 @@ const TabsCalendarRoute = TabsCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => TabsRoute,
 } as any)
-const TabsAccountRoute = TabsAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => TabsRoute,
-} as any)
 const TabsAbsenceRoute = TabsAbsenceRouteImport.update({
   id: '/absence',
   path: '/absence',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsAccountPaymentsRoute = TabsAccountPaymentsRouteImport.update({
+  id: '/account/payments',
+  path: '/account/payments',
   getParentRoute: () => TabsRoute,
 } as any)
 
@@ -86,7 +86,6 @@ export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/conversation': typeof ConversationRoute
   '/absence': typeof TabsAbsenceRoute
-  '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/feedback': typeof TabsFeedbackRoute
@@ -94,11 +93,11 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof TabsNotificationsRoute
   '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
+  '/account/payments': typeof TabsAccountPaymentsRoute
 }
 export interface FileRoutesByTo {
   '/conversation': typeof ConversationRoute
   '/absence': typeof TabsAbsenceRoute
-  '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/feedback': typeof TabsFeedbackRoute
@@ -107,13 +106,13 @@ export interface FileRoutesByTo {
   '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
   '/': typeof TabsIndexRoute
+  '/account/payments': typeof TabsAccountPaymentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
   '/conversation': typeof ConversationRoute
   '/_tabs/absence': typeof TabsAbsenceRoute
-  '/_tabs/account': typeof TabsAccountRoute
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
   '/_tabs/feedback': typeof TabsFeedbackRoute
@@ -122,6 +121,7 @@ export interface FileRoutesById {
   '/_tabs/security': typeof TabsSecurityRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
   '/_tabs/': typeof TabsIndexRoute
+  '/_tabs/account/payments': typeof TabsAccountPaymentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,7 +129,6 @@ export interface FileRouteTypes {
     | '/'
     | '/conversation'
     | '/absence'
-    | '/account'
     | '/calendar'
     | '/children'
     | '/feedback'
@@ -137,11 +136,11 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/security'
     | '/updates'
+    | '/account/payments'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/conversation'
     | '/absence'
-    | '/account'
     | '/calendar'
     | '/children'
     | '/feedback'
@@ -150,12 +149,12 @@ export interface FileRouteTypes {
     | '/security'
     | '/updates'
     | '/'
+    | '/account/payments'
   id:
     | '__root__'
     | '/_tabs'
     | '/conversation'
     | '/_tabs/absence'
-    | '/_tabs/account'
     | '/_tabs/calendar'
     | '/_tabs/children'
     | '/_tabs/feedback'
@@ -164,6 +163,7 @@ export interface FileRouteTypes {
     | '/_tabs/security'
     | '/_tabs/updates'
     | '/_tabs/'
+    | '/_tabs/account/payments'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -243,13 +243,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsCalendarRouteImport
       parentRoute: typeof TabsRoute
     }
-    '/_tabs/account': {
-      id: '/_tabs/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof TabsAccountRouteImport
-      parentRoute: typeof TabsRoute
-    }
     '/_tabs/absence': {
       id: '/_tabs/absence'
       path: '/absence'
@@ -257,12 +250,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsAbsenceRouteImport
       parentRoute: typeof TabsRoute
     }
+    '/_tabs/account/payments': {
+      id: '/_tabs/account/payments'
+      path: '/account/payments'
+      fullPath: '/account/payments'
+      preLoaderRoute: typeof TabsAccountPaymentsRouteImport
+      parentRoute: typeof TabsRoute
+    }
   }
 }
 
 interface TabsRouteChildren {
   TabsAbsenceRoute: typeof TabsAbsenceRoute
-  TabsAccountRoute: typeof TabsAccountRoute
   TabsCalendarRoute: typeof TabsCalendarRoute
   TabsChildrenRoute: typeof TabsChildrenRoute
   TabsFeedbackRoute: typeof TabsFeedbackRoute
@@ -271,11 +270,11 @@ interface TabsRouteChildren {
   TabsSecurityRoute: typeof TabsSecurityRoute
   TabsUpdatesRoute: typeof TabsUpdatesRoute
   TabsIndexRoute: typeof TabsIndexRoute
+  TabsAccountPaymentsRoute: typeof TabsAccountPaymentsRoute
 }
 
 const TabsRouteChildren: TabsRouteChildren = {
   TabsAbsenceRoute: TabsAbsenceRoute,
-  TabsAccountRoute: TabsAccountRoute,
   TabsCalendarRoute: TabsCalendarRoute,
   TabsChildrenRoute: TabsChildrenRoute,
   TabsFeedbackRoute: TabsFeedbackRoute,
@@ -284,6 +283,7 @@ const TabsRouteChildren: TabsRouteChildren = {
   TabsSecurityRoute: TabsSecurityRoute,
   TabsUpdatesRoute: TabsUpdatesRoute,
   TabsIndexRoute: TabsIndexRoute,
+  TabsAccountPaymentsRoute: TabsAccountPaymentsRoute,
 }
 
 const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
@@ -295,3 +295,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
