@@ -16,6 +16,7 @@ import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
 import { Route as TabsSecurityRouteImport } from './routes/_tabs.security'
 import { Route as TabsNotificationsRouteImport } from './routes/_tabs.notifications'
 import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
+import { Route as TabsFeedbackRouteImport } from './routes/_tabs.feedback'
 import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
 import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
@@ -55,6 +56,11 @@ const TabsMessagesRoute = TabsMessagesRouteImport.update({
   path: '/messages',
   getParentRoute: () => TabsRoute,
 } as any)
+const TabsFeedbackRoute = TabsFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => TabsRoute,
+} as any)
 const TabsChildrenRoute = TabsChildrenRouteImport.update({
   id: '/children',
   path: '/children',
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
+  '/feedback': typeof TabsFeedbackRoute
   '/messages': typeof TabsMessagesRoute
   '/notifications': typeof TabsNotificationsRoute
   '/security': typeof TabsSecurityRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
+  '/feedback': typeof TabsFeedbackRoute
   '/messages': typeof TabsMessagesRoute
   '/notifications': typeof TabsNotificationsRoute
   '/security': typeof TabsSecurityRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/_tabs/account': typeof TabsAccountRoute
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
+  '/_tabs/feedback': typeof TabsFeedbackRoute
   '/_tabs/messages': typeof TabsMessagesRoute
   '/_tabs/notifications': typeof TabsNotificationsRoute
   '/_tabs/security': typeof TabsSecurityRoute
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/calendar'
     | '/children'
+    | '/feedback'
     | '/messages'
     | '/notifications'
     | '/security'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/calendar'
     | '/children'
+    | '/feedback'
     | '/messages'
     | '/notifications'
     | '/security'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/_tabs/account'
     | '/_tabs/calendar'
     | '/_tabs/children'
+    | '/_tabs/feedback'
     | '/_tabs/messages'
     | '/_tabs/notifications'
     | '/_tabs/security'
@@ -210,6 +222,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsMessagesRouteImport
       parentRoute: typeof TabsRoute
     }
+    '/_tabs/feedback': {
+      id: '/_tabs/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof TabsFeedbackRouteImport
+      parentRoute: typeof TabsRoute
+    }
     '/_tabs/children': {
       id: '/_tabs/children'
       path: '/children'
@@ -246,6 +265,7 @@ interface TabsRouteChildren {
   TabsAccountRoute: typeof TabsAccountRoute
   TabsCalendarRoute: typeof TabsCalendarRoute
   TabsChildrenRoute: typeof TabsChildrenRoute
+  TabsFeedbackRoute: typeof TabsFeedbackRoute
   TabsMessagesRoute: typeof TabsMessagesRoute
   TabsNotificationsRoute: typeof TabsNotificationsRoute
   TabsSecurityRoute: typeof TabsSecurityRoute
@@ -258,6 +278,7 @@ const TabsRouteChildren: TabsRouteChildren = {
   TabsAccountRoute: TabsAccountRoute,
   TabsCalendarRoute: TabsCalendarRoute,
   TabsChildrenRoute: TabsChildrenRoute,
+  TabsFeedbackRoute: TabsFeedbackRoute,
   TabsMessagesRoute: TabsMessagesRoute,
   TabsNotificationsRoute: TabsNotificationsRoute,
   TabsSecurityRoute: TabsSecurityRoute,
