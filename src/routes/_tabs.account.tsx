@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Calendar, Check, ChevronRight, FileText, MessageSquare, Settings, LogOut } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar, Check, ChevronRight, FileText, MessageSquare, Settings, LogOut, ShieldCheck, CalendarOff } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { billing, parent } from "@/lib/mock";
 
