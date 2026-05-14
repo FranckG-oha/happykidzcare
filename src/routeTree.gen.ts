@@ -13,6 +13,7 @@ import { Route as ConversationRouteImport } from './routes/conversation'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
+import { Route as TabsSecurityRouteImport } from './routes/_tabs.security'
 import { Route as TabsNotificationsRouteImport } from './routes/_tabs.notifications'
 import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
 import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
@@ -36,6 +37,11 @@ const TabsIndexRoute = TabsIndexRouteImport.update({
 const TabsUpdatesRoute = TabsUpdatesRouteImport.update({
   id: '/updates',
   path: '/updates',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsSecurityRoute = TabsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
   getParentRoute: () => TabsRoute,
 } as any)
 const TabsNotificationsRoute = TabsNotificationsRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
   '/notifications': typeof TabsNotificationsRoute
+  '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
 }
 export interface FileRoutesByTo {
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
   '/notifications': typeof TabsNotificationsRoute
+  '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
   '/': typeof TabsIndexRoute
 }
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_tabs/children': typeof TabsChildrenRoute
   '/_tabs/messages': typeof TabsMessagesRoute
   '/_tabs/notifications': typeof TabsNotificationsRoute
+  '/_tabs/security': typeof TabsSecurityRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
   '/_tabs/': typeof TabsIndexRoute
 }
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/children'
     | '/messages'
     | '/notifications'
+    | '/security'
     | '/updates'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/children'
     | '/messages'
     | '/notifications'
+    | '/security'
     | '/updates'
     | '/'
   id:
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/_tabs/children'
     | '/_tabs/messages'
     | '/_tabs/notifications'
+    | '/_tabs/security'
     | '/_tabs/updates'
     | '/_tabs/'
   fileRoutesById: FileRoutesById
@@ -163,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/updates'
       fullPath: '/updates'
       preLoaderRoute: typeof TabsUpdatesRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/security': {
+      id: '/_tabs/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof TabsSecurityRouteImport
       parentRoute: typeof TabsRoute
     }
     '/_tabs/notifications': {
@@ -209,6 +228,7 @@ interface TabsRouteChildren {
   TabsChildrenRoute: typeof TabsChildrenRoute
   TabsMessagesRoute: typeof TabsMessagesRoute
   TabsNotificationsRoute: typeof TabsNotificationsRoute
+  TabsSecurityRoute: typeof TabsSecurityRoute
   TabsUpdatesRoute: typeof TabsUpdatesRoute
   TabsIndexRoute: typeof TabsIndexRoute
 }
@@ -219,6 +239,7 @@ const TabsRouteChildren: TabsRouteChildren = {
   TabsChildrenRoute: TabsChildrenRoute,
   TabsMessagesRoute: TabsMessagesRoute,
   TabsNotificationsRoute: TabsNotificationsRoute,
+  TabsSecurityRoute: TabsSecurityRoute,
   TabsUpdatesRoute: TabsUpdatesRoute,
   TabsIndexRoute: TabsIndexRoute,
 }
