@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { Search, Edit3 } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { messages } from "@/lib/mock";
