@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ConversationRouteImport } from './routes/conversation'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
@@ -18,6 +19,11 @@ import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
 import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
+const ConversationRoute = ConversationRouteImport.update({
+  id: '/conversation',
+  path: '/conversation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TabsRoute = TabsRouteImport.update({
   id: '/_tabs',
   getParentRoute: () => rootRouteImport,
@@ -60,6 +66,7 @@ const TabsAccountRoute = TabsAccountRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
+  '/conversation': typeof ConversationRoute
   '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/updates': typeof TabsUpdatesRoute
 }
 export interface FileRoutesByTo {
+  '/conversation': typeof ConversationRoute
   '/account': typeof TabsAccountRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
@@ -79,6 +87,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
+  '/conversation': typeof ConversationRoute
   '/_tabs/account': typeof TabsAccountRoute
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/conversation'
     | '/account'
     | '/calendar'
     | '/children'
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/updates'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/conversation'
     | '/account'
     | '/calendar'
     | '/children'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_tabs'
+    | '/conversation'
     | '/_tabs/account'
     | '/_tabs/calendar'
     | '/_tabs/children'
@@ -120,10 +132,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
+  ConversationRoute: typeof ConversationRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/conversation': {
+      id: '/conversation'
+      path: '/conversation'
+      fullPath: '/conversation'
+      preLoaderRoute: typeof ConversationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_tabs': {
       id: '/_tabs'
       path: ''
@@ -207,6 +227,7 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
+  ConversationRoute: ConversationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
