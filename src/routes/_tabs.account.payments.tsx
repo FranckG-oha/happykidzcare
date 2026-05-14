@@ -1,30 +1,30 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Check, ChevronRight, FileText, MessageSquare, Settings, LogOut, ShieldCheck, CalendarOff } from "lucide-react";
-import { AppHeader } from "@/components/AppHeader";
-import { billing, parent } from "@/lib/mock";
+import { ArrowRight, Calendar, Check } from "lucide-react";
+import { SubPageHeader } from "@/components/SubPageHeader";
+import { billing } from "@/lib/mock";
 
 export const Route = createFileRoute("/_tabs/account/payments")({
   head: () => ({
     meta: [
-      { title: "Account — Digital Sanctuary" },
-      { name: "description", content: "Manage tuition, payments, and your family's account settings." },
+      { title: "Payment Hub — Digital Sanctuary" },
+      { name: "description", content: "Family tuition, activity fees, and transaction history." },
     ],
   }),
-  component: AccountPage,
+  component: PaymentsPage,
 });
 
-function AccountPage() {
+function PaymentsPage() {
   return (
     <>
-      <AppHeader />
-      <section className="px-6 pt-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Hi {parent.name}</p>
-        <h1 className="mt-1 font-display text-[2.75rem] font-extrabold leading-[1.02] text-foreground">
-          Payments Hub<span className="text-primary">.</span>
+      <SubPageHeader title="Payment Hub" />
+      <section className="px-6 pt-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Family invoice</p>
+        <h1 className="mt-1 font-display text-[2.5rem] font-extrabold leading-[1.05] text-foreground">
+          Payment Hub<span className="text-primary">.</span>
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Manage your family's tuition, activity fees, and view your transaction history securely.
+          A single family invoice covering both children, with a clear per-child breakdown.
         </p>
       </section>
 
@@ -100,34 +100,7 @@ function AccountPage() {
         </ul>
       </section>
 
-      {/* Account links */}
-      <section className="mt-8 px-6">
-        <h2 className="font-display text-xl font-bold text-foreground">Account</h2>
-        <div className="mt-4 overflow-hidden rounded-3xl bg-surface-low">
-          {([
-            { icon: ShieldCheck, label: "Security & Pickup", to: "/security" },
-            { icon: CalendarOff, label: "Declare an absence", to: "/absence" },
-            { icon: FileText, label: "Annual Feedback 2025", hint: "New", to: "/feedback" },
-            { icon: MessageSquare, label: "Communication preferences", to: "/account" },
-            { icon: Settings, label: "Family details & emergency contacts", to: "/account" },
-            { icon: LogOut, label: "Sign out", to: "/account" },
-          ] as const).map((item, i, arr) => (
-            <motion.div key={item.label} whileTap={{ scale: 0.98 }}>
-              <Link
-                to={item.to}
-                className={`flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-card ${
-                  i < arr.length - 1 ? "border-b border-border" : ""
-                }`}
-              >
-                <item.icon className="h-4 w-4 text-primary" />
-                <span className="flex-1 text-sm font-semibold text-foreground">{item.label}</span>
-                {"hint" in item && item.hint && <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-secondary">{item.hint}</span>}
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      <div className="h-6" />
     </>
   );
 }
