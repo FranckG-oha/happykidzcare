@@ -104,23 +104,27 @@ function AccountPage() {
       <section className="mt-8 px-6">
         <h2 className="font-display text-xl font-bold text-foreground">Account</h2>
         <div className="mt-4 overflow-hidden rounded-3xl bg-surface-low">
-          {[
-            { icon: FileText, label: "Annual Feedback 2025", hint: "New" },
-            { icon: MessageSquare, label: "Communication preferences" },
-            { icon: Settings, label: "Family details & emergency contacts" },
-            { icon: LogOut, label: "Sign out" },
-          ].map((item, i, arr) => (
-            <button
-              key={item.label}
-              className={`flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-card ${
-                i < arr.length - 1 ? "border-b border-border" : ""
-              }`}
-            >
-              <item.icon className="h-4 w-4 text-primary" />
-              <span className="flex-1 text-sm font-semibold text-foreground">{item.label}</span>
-              {item.hint && <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-secondary">{item.hint}</span>}
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </button>
+          {([
+            { icon: ShieldCheck, label: "Security & Pickup", to: "/security" },
+            { icon: CalendarOff, label: "Declare an absence", to: "/absence" },
+            { icon: FileText, label: "Annual Feedback 2025", hint: "New", to: "/feedback" },
+            { icon: MessageSquare, label: "Communication preferences", to: "/account" },
+            { icon: Settings, label: "Family details & emergency contacts", to: "/account" },
+            { icon: LogOut, label: "Sign out", to: "/account" },
+          ] as const).map((item, i, arr) => (
+            <motion.div key={item.label} whileTap={{ scale: 0.98 }}>
+              <Link
+                to={item.to}
+                className={`flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-card ${
+                  i < arr.length - 1 ? "border-b border-border" : ""
+                }`}
+              >
+                <item.icon className="h-4 w-4 text-primary" />
+                <span className="flex-1 text-sm font-semibold text-foreground">{item.label}</span>
+                {"hint" in item && item.hint && <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-secondary">{item.hint}</span>}
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+            </motion.div>
           ))}
         </div>
       </section>
