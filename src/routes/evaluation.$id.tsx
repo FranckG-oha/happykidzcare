@@ -33,7 +33,7 @@ const dotColor: Record<string, string> = {
 };
 
 function EvaluationPage() {
-  const { ev } = Route.useLoaderData();
+  const { ev } = Route.useLoaderData() as { ev: (typeof evaluationDetail)[keyof typeof evaluationDetail] };
   const child = children.find((c) => c.id === ev.childId);
   return (
     <div className="mx-auto min-h-screen w-full max-w-[440px] bg-background pb-12">
