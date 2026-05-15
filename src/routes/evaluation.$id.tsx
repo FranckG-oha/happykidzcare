@@ -6,9 +6,9 @@ import { evaluationDetail, children } from "@/lib/mock";
 export const Route = createFileRoute("/evaluation/$id")({
   head: () => ({ meta: [{ title: "Evaluation — Digital Sanctuary" }] }),
   loader: ({ params }) => {
-    const ev = evaluationDetail[params.id];
+    const ev = evaluationDetail[params.id as keyof typeof evaluationDetail];
     if (!ev) throw notFound();
-    return { ev };
+    return { ev: ev as (typeof evaluationDetail)[keyof typeof evaluationDetail] };
   },
   component: EvaluationPage,
   notFoundComponent: () => (
