@@ -1,4 +1,4 @@
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, MessageSquare } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { parent } from "@/lib/mock";
@@ -25,25 +25,44 @@ export function AppHeader({ action = "search" as "search" | "bell", badge = 3 }:
           Digital Sanctuary
         </span>
       </Link>
-      <Link
-        to="/notifications"
-        className="relative flex h-10 w-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface-low"
-        aria-label={action}
-      >
-        <motion.span whileTap={{ scale: 0.85 }} whileHover={{ rotate: action === "bell" ? -10 : 0 }} className="flex">
-          <Icon className="h-5 w-5" strokeWidth={2.2} />
-        </motion.span>
-        {action === "bell" && badge ? (
+      <div className="flex items-center gap-1">
+        <Link
+          to="/messages"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface-low"
+          aria-label="Messages"
+        >
+          <motion.span whileTap={{ scale: 0.85 }} className="flex">
+            <MessageSquare className="h-5 w-5" strokeWidth={2.2} />
+          </motion.span>
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 18, delay: 0.4 }}
+            transition={{ type: "spring", stiffness: 500, damping: 18, delay: 0.45 }}
             className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[9px] font-bold text-secondary-foreground ring-2 ring-background"
           >
-            {badge}
+            2
           </motion.span>
-        ) : null}
-      </Link>
+        </Link>
+        <Link
+          to="/notifications"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface-low"
+          aria-label={action}
+        >
+          <motion.span whileTap={{ scale: 0.85 }} whileHover={{ rotate: action === "bell" ? -10 : 0 }} className="flex">
+            <Icon className="h-5 w-5" strokeWidth={2.2} />
+          </motion.span>
+          {action === "bell" && badge ? (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 18, delay: 0.4 }}
+              className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[9px] font-bold text-secondary-foreground ring-2 ring-background"
+            >
+              {badge}
+            </motion.span>
+          ) : null}
+        </Link>
+      </div>
     </motion.header>
   );
 }

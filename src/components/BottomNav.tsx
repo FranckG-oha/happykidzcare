@@ -1,15 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Smile, Bell, MessageSquare, Calendar, User } from "lucide-react";
+import { Home, Smile, Bell, Calendar, User } from "lucide-react";
 import { motion, LayoutGroup } from "framer-motion";
 
 type Tab = { to: string; label: string; icon: typeof Home; exact?: boolean; badge?: number };
 const tabs: Tab[] = [
   { to: "/", label: "Home", icon: Home, exact: true },
-  { to: "/children", label: "Children", icon: Smile },
+  { to: "/children", label: "My Children", icon: Smile },
   { to: "/updates", label: "Updates", icon: Bell, badge: 3 },
-  { to: "/messages", label: "Messages", icon: MessageSquare, badge: 2 },
   { to: "/calendar", label: "Calendar", icon: Calendar },
-  { to: "/account", label: "Account", icon: User },
+  { to: "/account", label: "Me", icon: User },
 ];
 
 export function BottomNav() {

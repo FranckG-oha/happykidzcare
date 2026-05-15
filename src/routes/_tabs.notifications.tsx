@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, MessageSquare, Users, CalendarDays, Receipt } from "lucide-react";
+import { FileText, MessageSquare, Users, CalendarDays, Receipt, HeartPulse, CheckCheck } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
-import { notifications, type NotifKind } from "@/lib/mock";
+import { notifications, type NotifKind, type NotifSection } from "@/lib/mock";
 
 export const Route = createFileRoute("/_tabs/notifications")({
   head: () => ({
@@ -15,7 +15,12 @@ export const Route = createFileRoute("/_tabs/notifications")({
   component: NotificationsPage,
 });
 
-const filters = ["All", "My Children", "School", "Payments"] as const;
+const filters = [
+  { id: "all", label: "All" },
+  { id: "myChildren", label: "My Children" },
+  { id: "school", label: "School" },
+  { id: "payments", label: "Payments" },
+] as const;
 
 const iconMap: Record<NotifKind, typeof FileText> = {
   report: FileText,
@@ -23,11 +28,13 @@ const iconMap: Record<NotifKind, typeof FileText> = {
   event: Users,
   schedule: CalendarDays,
   payment: Receipt,
+  health: HeartPulse,
 };
 
 function NotificationsPage() {
-  const [filter, setFilter] = useState<(typeof filters)[number]>("All");
-  const grouped = notifications.reduce<Record<string, typeof notifications>>((a, n) => {
+  const [filter, setFilter] = useState<(typeof filters)[number]["id"]>("all");
+  const filtered = notifications.filter((n) => filter === "all" ? true : n.section === (filter as NotifSection));
+  const grouped = filtered.reduce<Record<string, typeof notifications>>((a, n) => {
     (a[n.group] ||= []).push(n);
     return a;
   }, {});
@@ -36,23 +43,26 @@ function NotificationsPage() {
     <>
       <AppHeader action="search" />
 
-      <section className="px-6 pt-6">
-        <h1 className="font-display text-4xl font-extrabold leading-none text-foreground">Notifications</h1>
+      <section className="flex items-end justify-between px-6 pt-6">
+        <h1 className="font-display text-4xl font-extrabold leading-none text-foreground">Updates</h1>
+        <motion.button whileTap={{ scale: 0.95 }} className="inline-flex items-center gap-1.5 rounded-full bg-surface-low px-3 py-2 text-xs font-semibold text-foreground">
+          <CheckCheck className="h-3.5 w-3.5" /> Mark all read
+        </motion.button>
       </section>
 
       <nav className="mt-5 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {filters.map((f) => {
-          const sel = filter === f;
+          const sel = filter === f.id;
           return (
             <motion.button
-              key={f}
+              key={f.id}
               whileTap={{ scale: 0.94 }}
-              onClick={() => setFilter(f)}
+              onClick={() => setFilter(f.id)}
               className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors ${
                 sel ? "bg-primary text-primary-foreground" : "bg-surface-low text-foreground"
               }`}
             >
-              {f}
+              {f.label}
             </motion.button>
           );
         })}
@@ -104,7 +114,7 @@ function NotificationsPage() {
                           )}
                           {n.rsvp && (
                             <div className="mt-3 flex gap-2">
-                              <motion.button whileTap={{ scale: 0.95 }} className="flex-1 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground">Accept</motion.button>
+                              <motion.button whileTap={{ scale: 0.95 }} className="flex-1 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground">Confirm</motion.button>
                               <motion.button whileTap={{ scale: 0.95 }} className="flex-1 rounded-full bg-surface-low px-4 py-2 text-xs font-bold text-foreground">Decline</motion.button>
                             </div>
                           )}
@@ -115,8 +125,12 @@ function NotificationsPage() {
                 })}
               </AnimatePresence>
             </ul>
+            {items.length === 0 && <p className="text-center text-xs text-muted-foreground">Nothing here.</p>}
           </section>
         ))}
+        {filtered.length === 0 && (
+          <p className="py-12 text-center text-sm text-muted-foreground">No updates in this category.</p>
+        )}
       </div>
     </>
   );

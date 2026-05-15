@@ -1,273 +1,383 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AppHeader } from "@/components/AppHeader";
-import { Heart, Utensils, Moon, Baby } from "lucide-react";
-import { children, todayTimeline, milestones } from "@/lib/mock";
+import { Heart, MessageCircle, AlertTriangle, Pill, FileText, Download, ChevronRight, Activity, Camera } from "lucide-react";
+import { children, dailyReports, pastReports, healthData, gallery, evaluationList } from "@/lib/mock";
 
 export const Route = createFileRoute("/_tabs/children")({
   head: () => ({
     meta: [
-      { title: "Children — Digital Sanctuary" },
-      { name: "description", content: "Daily reports, evaluations, and gallery for each of your children." },
+      { title: "My Children — Digital Sanctuary" },
+      { name: "description", content: "Today's report, gallery, evaluations and health for each of your children." },
     ],
   }),
   component: ChildrenPage,
 });
 
-const tabs = ["Today", "Reports", "Gallery", "Evaluations"] as const;
+const tabs = ["Today", "Reports", "Gallery", "Evaluations", "Health"] as const;
+type Tab = (typeof tabs)[number];
 
 function ChildrenPage() {
   const [child, setChild] = useState(children[0].id);
-  const [tab, setTab] = useState<(typeof tabs)[number]>("Today");
+  const [tab, setTab] = useState<Tab>("Today");
   const active = children.find((c) => c.id === child)!;
 
   return (
     <>
       <AppHeader />
 
-      {/* Child switcher */}
-      <section className="mt-3 flex gap-3 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* Child switcher with photo cards */}
+      <section className="mt-3 flex gap-3 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {children.map((c) => {
           const sel = c.id === child;
           return (
-            <button
+            <motion.button
               key={c.id}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setChild(c.id)}
-              className={`flex shrink-0 items-center gap-2.5 rounded-full p-1.5 pr-4 transition-all ${
-                sel ? "bg-primary-container" : "bg-card"
+              className={`relative flex shrink-0 items-center gap-3 rounded-2xl px-3 py-2 transition-colors ${
+                sel ? "bg-primary-container" : "bg-surface-low"
               }`}
             >
-              <img src={c.avatar} alt="" width={36} height={36} className="h-9 w-9 rounded-full object-cover" />
+              <img src={c.avatar} alt="" className="h-11 w-11 rounded-xl object-cover" />
               <div className="text-left">
-                <div className="font-display text-sm font-bold leading-tight text-foreground">{c.name}</div>
-                <div className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground">{c.cycle}</div>
+                <div className={`font-display text-sm font-bold leading-tight ${sel ? "text-primary" : "text-foreground"}`}>{c.name}</div>
+                <div className="text-[10px] font-semibold tracking-[0.06em] text-muted-foreground">{c.room} · {c.age}</div>
               </div>
-            </button>
+              {sel && (
+                <motion.span layoutId="child-underline" className="absolute -bottom-0.5 left-3 right-3 h-0.5 rounded-full bg-primary" />
+              )}
+            </motion.button>
           );
         })}
       </section>
 
-      {/* Tabs */}
-      <nav className="mt-4 flex gap-1 px-6">
+      {/* Sub-tabs */}
+      <nav className="mt-3 flex gap-1 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((t) => {
           const sel = tab === t;
           return (
-            <button
+            <motion.button
               key={t}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setTab(t)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 sel ? "bg-primary-container text-primary" : "text-muted-foreground"
               }`}
             >
               {t}
-            </button>
+            </motion.button>
           );
         })}
       </nav>
 
-      {tab === "Today" && <TodayView />}
-      {tab === "Reports" && <ReportsView childName={active.name} />}
-      {tab === "Gallery" && <GalleryQuickView />}
-      {tab === "Evaluations" && <EvaluationsView />}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${child}-${tab}`}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.22 }}
+        >
+          {tab === "Today" && <TodayView childId={child} />}
+          {tab === "Reports" && <ReportsView childId={child} />}
+          {tab === "Gallery" && <GalleryView childName={active.name} />}
+          {tab === "Evaluations" && <EvaluationsView childId={child} />}
+          {tab === "Health" && <HealthView childId={child} />}
+        </motion.div>
+      </AnimatePresence>
     </>
   );
 }
 
-function TodayView() {
+/* ---------- TODAY ---------- */
+
+function TodayView({ childId }: { childId: string }) {
+  const r = dailyReports[childId];
+  if (!r) return <Empty>No report yet today.</Empty>;
   return (
     <>
-      {/* Reminder */}
-      <div className="mx-6 mt-5 flex items-start gap-3 rounded-2xl bg-secondary-container/60 p-4">
-        <span className="mt-0.5 text-secondary">●</span>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-secondary">Important Reminder</p>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-secondary/80">Just now</span>
-          </div>
-          <p className="mt-1 text-sm leading-snug text-foreground">
-            Please pack extra wipes tomorrow for the scheduled messy play activity.
-          </p>
-        </div>
-      </div>
-
-      {/* Day header */}
-      <section className="px-6 pt-6">
-        <div className="flex items-end justify-between">
+      <section className="mx-6 mt-5 rounded-[1.75rem] bg-card p-5" style={{ boxShadow: "var(--shadow-soft)" }}>
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="font-display text-4xl font-extrabold leading-none text-foreground">Tuesday</h1>
-            <p className="mt-1 text-sm text-muted-foreground">October 24, 2023</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-secondary">Daily Report · {r.date}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">Sent at {r.sentAt} by {r.by}</p>
           </div>
-          <span className="rounded-full bg-primary-container px-3 py-1.5 text-xs font-semibold text-primary">
-            😊 Happy & Playful
-          </span>
+          <div className="flex gap-1.5">
+            <motion.button whileTap={{ scale: 0.9 }} className="flex h-9 w-9 items-center justify-center rounded-full bg-destructive/10 text-destructive" aria-label="React">
+              <Heart className="h-4 w-4" />
+            </motion.button>
+            <Link to="/conversation" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary" aria-label="Ask a question">
+              <MessageCircle className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Teacher note */}
-      <article className="mx-6 mt-5 rounded-3xl bg-card p-5" style={{ boxShadow: "var(--shadow-soft)" }}>
-        <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-secondary">
-          <Heart className="h-3.5 w-3.5 fill-destructive text-destructive" /> Teacher's Note
-        </p>
-        <p className="mt-3 text-[15px] leading-relaxed text-foreground">
-          "Léa was very enthusiastic during morning story time. She actively participated and even helped hand out
-          the picture books to her friends!"
-        </p>
-        <div className="mt-4 flex items-center gap-2">
-          <img src={milestones.teacher.avatar} alt="" width={28} height={28} className="h-7 w-7 rounded-full object-cover" />
-          <span className="text-xs font-semibold text-muted-foreground">Marie D.</span>
-        </div>
-      </article>
-
-      {/* Care grid */}
-      <section className="mx-6 mt-4 grid grid-cols-2 gap-3">
-        <CareTile icon={<Utensils className="h-4 w-4" />} label="Meals">
-          <div className="mt-3 flex gap-1">
-            {[1, 1, 1, 0].map((on, i) => (
-              <span key={i} className={`h-2 flex-1 rounded-full ${on ? "bg-primary" : "bg-primary/15"}`} />
-            ))}
-          </div>
-          <p className="mt-2 text-xs font-semibold text-foreground">Ate well today</p>
-        </CareTile>
-        <CareTile icon={<Moon className="h-4 w-4" />} label="Nap">
-          <p className="mt-3 font-display text-2xl font-extrabold text-foreground">1h 45m</p>
-          <p className="text-[11px] font-semibold text-muted-foreground">12:30 — 14:15</p>
-        </CareTile>
-        <CareTile icon={<Baby className="h-4 w-4" />} label="Diapers">
-          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary-container px-2.5 py-1 text-xs font-semibold text-primary">
-            <span className="font-display text-base">3</span> Changes today
-          </div>
-        </CareTile>
-        <CareTile icon={<Heart className="h-4 w-4" />} label="Mood">
-          <p className="mt-3 font-display text-lg font-bold text-foreground">Energetic</p>
-          <p className="text-[11px] text-muted-foreground">Smiled often, eager to engage</p>
-        </CareTile>
-      </section>
-
-      {/* Today's activities */}
-      <section className="mt-6 px-6">
-        <h2 className="font-display text-xl font-bold text-foreground">Today's Activities</h2>
-        <div className="mt-3 space-y-3">
-          {todayTimeline.filter((t) => !t.important).map((t) => (
-            <article key={t.id} className="overflow-hidden rounded-3xl bg-card" style={{ boxShadow: "var(--shadow-soft)" }}>
-              {t.image && <img src={t.image} alt="" loading="lazy" className="h-44 w-full object-cover" />}
-              <div className="p-4">
-                <span className="inline-block rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-secondary">
-                  {t.tag}
-                </span>
-                <h3 className="mt-2 font-display text-base font-bold text-foreground">{t.title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{t.body}</p>
+      {/* Meals */}
+      <Block title="Meals" icon="🍽">
+        <div className="space-y-2.5">
+          {r.meals.map((m) => (
+            <div key={m.label} className="flex items-center gap-3">
+              <span className="w-20 text-xs font-semibold text-muted-foreground">{m.label}</span>
+              <div className="flex flex-1 gap-1">
+                {[0, 1, 2, 3].map((i) => (
+                  <span key={i} className={`h-2 flex-1 rounded-full ${i < m.level ? "bg-primary" : "bg-primary/15"}`} />
+                ))}
               </div>
-            </article>
+              <span className="w-24 text-right text-[11px] font-semibold text-foreground">
+                {m.level === 4 ? "Ate well" : m.level >= 2 ? "Ate some" : m.level >= 1 ? "A little" : "Refused"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Block>
+
+      {/* Nap */}
+      <Block title="Nap" icon="😴">
+        <p className="text-sm font-semibold text-foreground">{r.nap.start} → {r.nap.end} · {r.nap.duration}</p>
+        <p className="text-xs text-muted-foreground">Quality: {r.nap.quality}</p>
+      </Block>
+
+      {/* Diapers (CYCLE_0 only) */}
+      {r.diapers && (
+        <Block title="Diapers" icon="🧷">
+          <p className="text-sm font-semibold text-foreground">{r.diapers.count} changes · last at {r.diapers.lastAt}</p>
+        </Block>
+      )}
+
+      {/* Health */}
+      <Block title="Health" icon="🌡">
+        <p className="text-sm font-semibold text-foreground">Temperature: {r.health.temperature} · {r.health.status}</p>
+      </Block>
+
+      {/* Mood */}
+      <Block title="Mood" icon="😊">
+        <div className="flex gap-3 text-sm">
+          <span className="rounded-full bg-surface-low px-3 py-1 text-foreground">Morning: {r.mood.morning}</span>
+          <span className="rounded-full bg-surface-low px-3 py-1 text-foreground">Afternoon: {r.mood.afternoon}</span>
+        </div>
+      </Block>
+
+      {/* Activities */}
+      <Block title="Activities" icon="🎨">
+        <div className="flex flex-wrap gap-2">
+          {r.activities.map((a) => (
+            <span key={a} className="rounded-full bg-primary-container px-3 py-1 text-xs font-semibold text-primary">{a}</span>
+          ))}
+        </div>
+      </Block>
+
+      {/* Educator note */}
+      <Block title="Educator note" icon="💬">
+        <p className="text-sm italic leading-relaxed text-foreground">"{r.note}"</p>
+        <p className="mt-2 text-[11px] text-muted-foreground">— {r.by}</p>
+      </Block>
+
+      <div className="h-4" />
+    </>
+  );
+}
+
+function Block({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
+  return (
+    <section className="mx-6 mt-3 rounded-[1.5rem] bg-surface-low p-4">
+      <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+        <span className="text-base">{icon}</span> {title}
+      </p>
+      {children}
+    </section>
+  );
+}
+
+/* ---------- REPORTS ---------- */
+
+function ReportsView({ childId }: { childId: string }) {
+  const list = pastReports.filter((r) => r.childId === childId);
+  return (
+    <section className="mt-5 space-y-3 px-6">
+      <p className="px-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Past daily reports</p>
+      {list.length === 0 && <Empty>No past reports.</Empty>}
+      {list.map((r, i) => (
+        <motion.article
+          key={r.id}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.06 }}
+          className="flex items-center gap-3 rounded-3xl bg-card p-4"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-container text-primary">
+            <FileText className="h-4 w-4" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">{r.date}</p>
+            <p className="font-display text-sm font-bold text-foreground">{r.title}</p>
+            <p className="truncate text-xs text-muted-foreground">{r.summary}</p>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </motion.article>
+      ))}
+    </section>
+  );
+}
+
+/* ---------- GALLERY ---------- */
+
+function GalleryView({ childName }: { childName: string }) {
+  const [filter, setFilter] = useState<"only" | "all">("all");
+  const items = gallery.filter((g) => filter === "all" ? true : (g.child === childName || g.children?.includes(childName)));
+
+  return (
+    <>
+      <section className="px-6 pt-5">
+        <div className="flex gap-2 rounded-full bg-surface-low p-1">
+          {(["only", "all"] as const).map((k) => (
+            <motion.button key={k} whileTap={{ scale: 0.95 }} onClick={() => setFilter(k)}
+              className={`flex-1 rounded-full py-2 text-xs font-semibold transition-colors ${filter === k ? "bg-card text-foreground" : "text-muted-foreground"}`}
+              style={filter === k ? { boxShadow: "var(--shadow-soft)" } : undefined}>
+              {k === "only" ? `Only ${childName}` : "All class photos"}
+            </motion.button>
           ))}
         </div>
       </section>
-    </>
-  );
-}
 
-function CareTile({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-3xl bg-card p-4" style={{ boxShadow: "var(--shadow-soft)" }}>
-      <div className="flex items-center justify-between text-muted-foreground">
-        <span className="text-sm font-semibold text-foreground">{label}</span>
-        {icon}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function ReportsView({ childName }: { childName: string }) {
-  return (
-    <div className="px-6 py-8 text-center text-sm text-muted-foreground">
-      Weekly reports for <strong className="text-foreground">{childName}</strong> coming soon.
-    </div>
-  );
-}
-
-function GalleryQuickView() {
-  return (
-    <div className="px-6 py-8 text-center text-sm text-muted-foreground">
-      Visit the <Link to="/updates" className="font-semibold text-primary">Updates tab</Link> for the full gallery.
-    </div>
-  );
-}
-
-function EvaluationsView() {
-  const m = milestones;
-  return (
-    <>
-      <section className="mt-5 px-6">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{m.period}</p>
-          <button className="rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground">↓ PDF</button>
-        </div>
-
-        <div className="relative mt-4">
-          <img src={m.child.avatar} alt={m.child.name} width={400} height={400}
-            className="aspect-square w-full rounded-[2rem] object-cover" style={{ boxShadow: "var(--shadow-soft)" }} />
-          <div className="absolute -bottom-3 left-4 rounded-2xl bg-secondary-container px-3 py-2">
-            <p className="font-display text-xl font-extrabold text-secondary leading-none">{m.overall}%</p>
-            <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-secondary">Overall progress</p>
-          </div>
-        </div>
-
-        <h2 className="mt-8 font-display text-3xl font-extrabold leading-tight text-foreground">
-          Spring Growth <span className="text-primary">&</span> Discovery<span className="text-primary">.</span>
-        </h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{m.intro}</p>
-
-        <div className="mt-4 flex gap-2">
-          <span className="rounded-full bg-primary-container px-3 py-1.5 text-xs font-semibold text-primary">March 2025</span>
-          <span className="rounded-full bg-primary-container px-3 py-1.5 text-xs font-semibold text-primary">Mme Johnson's Class</span>
-        </div>
-      </section>
-
-      <section className="mt-6 space-y-4 px-6">
-        {m.domains.map((d) => (
-          <div key={d.n} className="rounded-3xl bg-surface-low p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Domain {d.n}</p>
-            <h3 className="mt-1 font-display text-2xl font-bold text-foreground">{d.name}</h3>
-            <div className="mt-4 space-y-2.5">
-              {d.items.map((it) => (
-                <div key={it.title} className="flex items-center justify-between rounded-2xl bg-card p-3.5">
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground">{it.title}</p>
-                    <p className="text-xs text-muted-foreground">{it.body}</p>
-                  </div>
-                  <StatusPill status={it.status} />
-                </div>
-              ))}
+      <section className="mt-4 grid grid-cols-2 gap-2 px-6">
+        {items.map((g, i) => (
+          <motion.div key={g.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}
+            className="overflow-hidden rounded-2xl bg-card" style={{ boxShadow: "var(--shadow-soft)" }}>
+            <img src={g.src} alt="" className="aspect-square w-full object-cover" />
+            <div className="p-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{g.date}</p>
+              <p className="text-xs font-semibold text-foreground">{g.tag}</p>
             </div>
-          </div>
+          </motion.div>
         ))}
       </section>
 
-      <section className="mx-6 mt-6 rounded-3xl bg-surface-low p-6">
-        <p className="text-3xl text-primary leading-none">"</p>
-        <h3 className="mt-2 font-display text-xl font-bold text-foreground">Overall Reflection</h3>
-        <p className="mt-3 text-[15px] italic leading-relaxed text-foreground">{m.reflection}</p>
-        <div className="mt-5 flex items-center gap-3">
-          <img src={m.teacher.avatar} alt="" width={36} height={36} className="h-9 w-9 rounded-full object-cover" />
-          <div>
-            <p className="text-sm font-bold text-foreground">{m.teacher.name}</p>
-            <p className="text-xs text-muted-foreground">{m.teacher.role}</p>
-          </div>
-        </div>
+      <section className="px-6 pt-5">
+        <motion.button whileTap={{ scale: 0.97 }} className="flex w-full items-center justify-center gap-2 rounded-full bg-surface-low px-6 py-3 text-sm font-semibold text-foreground">
+          <Download className="h-4 w-4" /> Download all ({items.length})
+        </motion.button>
       </section>
     </>
   );
 }
 
-function StatusPill({ status }: { status: "Achieved" | "Developing" | "Emerging" }) {
-  const styles = {
-    Achieved: "bg-success/25 text-success-foreground",
-    Developing: "bg-primary-container text-primary",
-    Emerging: "bg-secondary-container text-secondary",
-  } as const;
+/* ---------- EVALUATIONS ---------- */
+
+function EvaluationsView({ childId }: { childId: string }) {
+  const list = evaluationList.filter((e) => e.childId === childId);
   return (
-    <span className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${styles[status]}`}>
-      {status}
-    </span>
+    <section className="mt-5 space-y-3 px-6">
+      <p className="px-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Developmental milestones</p>
+      {list.map((e, i) => {
+        const card = (
+          <motion.article
+            key={e.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06 }}
+            className={`rounded-3xl bg-card p-5 ${e.status === "pending" ? "opacity-60" : ""}`}
+            style={{ boxShadow: "var(--shadow-soft)" }}
+          >
+            <div className="flex items-center justify-between">
+              <p className="font-display text-base font-bold text-foreground">{e.period}</p>
+              {e.status === "published" ? (
+                <span className="rounded-full bg-success/20 px-2.5 py-1 text-[10px] font-bold text-success-foreground">Published</span>
+              ) : (
+                <span className="rounded-full bg-surface-low px-2.5 py-1 text-[10px] font-bold text-muted-foreground">Pending</span>
+              )}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {e.status === "published" ? `Published ${e.publishedAt}` : "Not yet available"}
+            </p>
+            <p className="mt-2 text-sm text-foreground">{e.summary}</p>
+          </motion.article>
+        );
+        return e.status === "published" ? (
+          <Link key={e.id} to="/evaluation/$id" params={{ id: e.id }}>{card}</Link>
+        ) : <div key={e.id}>{card}</div>;
+      })}
+    </section>
   );
+}
+
+/* ---------- HEALTH ---------- */
+
+function HealthView({ childId }: { childId: string }) {
+  const h = healthData[childId];
+  const sevColor: Record<string, string> = {
+    HIGH: "bg-destructive/15 text-destructive border-destructive/40",
+    MEDIUM: "bg-warning/25 text-warning-foreground border-warning/50",
+    LOW: "bg-surface-low text-muted-foreground border-border",
+  };
+  return (
+    <>
+      {/* Allergies banner */}
+      <section className="mx-6 mt-5">
+        <p className="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Allergies</p>
+        <div className="rounded-[1.5rem] border-2 border-destructive/30 bg-destructive/5 p-4">
+          <div className="mb-2 flex items-center gap-2 text-destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <p className="text-xs font-bold uppercase tracking-wider">Allergy alert</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {h.allergies.map((a) => (
+              <span key={a.name} className={`rounded-full border px-3 py-1 text-xs font-semibold ${sevColor[a.severity]}`}>
+                {a.name} · {a.severity}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Health events */}
+      <section className="mx-6 mt-5">
+        <p className="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Recent health events</p>
+        <ul className="space-y-2.5">
+          {h.events.map((e, i) => (
+            <motion.li key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
+              className="flex items-start gap-3 rounded-2xl bg-card p-4" style={{ boxShadow: "var(--shadow-soft)" }}>
+              <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                e.level === "alert" ? "bg-destructive/15 text-destructive" : e.level === "warn" ? "bg-warning/25 text-warning-foreground" : "bg-success/20 text-success-foreground"
+              }`}>
+                <Activity className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{e.date} · {e.type}</p>
+                <p className="text-sm text-foreground">{e.detail}</p>
+              </div>
+            </motion.li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Vaccinations */}
+      <section className="mx-6 mt-5">
+        <p className="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Vaccinations</p>
+        <div className="space-y-2">
+          {h.vaccinations.map((v, i) => (
+            <div key={i} className="flex items-center gap-3 rounded-2xl bg-surface-low p-3.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-card text-primary">
+                <Pill className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-foreground">{v.name}</p>
+                <p className="text-[11px] text-muted-foreground">{v.date}{v.due ? ` · ${v.due}` : ""}</p>
+              </div>
+              {v.due && <span className="rounded-full bg-warning/25 px-2.5 py-1 text-[10px] font-bold text-warning-foreground">Due</span>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="h-4" />
+    </>
+  );
+}
+
+function Empty({ children }: { children: React.ReactNode }) {
+  return <div className="px-6 py-8 text-center text-sm text-muted-foreground">{children}</div>;
 }

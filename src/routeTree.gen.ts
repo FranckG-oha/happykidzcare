@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ConversationRouteImport } from './routes/conversation'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
+import { Route as EvaluationIdRouteImport } from './routes/evaluation.$id'
 import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
 import { Route as TabsSecurityRouteImport } from './routes/_tabs.security'
 import { Route as TabsNotificationsRouteImport } from './routes/_tabs.notifications'
@@ -42,6 +43,11 @@ const TabsIndexRoute = TabsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TabsRoute,
+} as any)
+const EvaluationIdRoute = EvaluationIdRouteImport.update({
+  id: '/evaluation/$id',
+  path: '/evaluation/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TabsUpdatesRoute = TabsUpdatesRouteImport.update({
   id: '/updates',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof TabsNotificationsRoute
   '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
+  '/evaluation/$id': typeof EvaluationIdRoute
   '/account/children': typeof TabsAccountChildrenRoute
   '/account/help': typeof TabsAccountHelpRoute
   '/account/payments': typeof TabsAccountPaymentsRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof TabsNotificationsRoute
   '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
+  '/evaluation/$id': typeof EvaluationIdRoute
   '/': typeof TabsIndexRoute
   '/account/children': typeof TabsAccountChildrenRoute
   '/account/help': typeof TabsAccountHelpRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/_tabs/notifications': typeof TabsNotificationsRoute
   '/_tabs/security': typeof TabsSecurityRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
+  '/evaluation/$id': typeof EvaluationIdRoute
   '/_tabs/': typeof TabsIndexRoute
   '/_tabs/account/children': typeof TabsAccountChildrenRoute
   '/_tabs/account/help': typeof TabsAccountHelpRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/security'
     | '/updates'
+    | '/evaluation/$id'
     | '/account/children'
     | '/account/help'
     | '/account/payments'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/security'
     | '/updates'
+    | '/evaluation/$id'
     | '/'
     | '/account/children'
     | '/account/help'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/_tabs/notifications'
     | '/_tabs/security'
     | '/_tabs/updates'
+    | '/evaluation/$id'
     | '/_tabs/'
     | '/_tabs/account/children'
     | '/_tabs/account/help'
@@ -251,6 +263,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   ConversationRoute: typeof ConversationRoute
+  EvaluationIdRoute: typeof EvaluationIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof TabsIndexRouteImport
       parentRoute: typeof TabsRoute
+    }
+    '/evaluation/$id': {
+      id: '/evaluation/$id'
+      path: '/evaluation/$id'
+      fullPath: '/evaluation/$id'
+      preLoaderRoute: typeof EvaluationIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_tabs/updates': {
       id: '/_tabs/updates'
@@ -446,17 +466,8 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   ConversationRoute: ConversationRoute,
+  EvaluationIdRoute: EvaluationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
