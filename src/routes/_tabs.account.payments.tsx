@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Check } from "lucide-react";
+import { ArrowRight, Calendar, Check, FileText } from "lucide-react";
 import { SubPageHeader } from "@/components/SubPageHeader";
 import { billing } from "@/lib/mock";
 
@@ -24,13 +24,13 @@ function PaymentsPage() {
           Payment Hub<span className="text-primary">.</span>
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          A single family invoice covering both children, with a clear per-child breakdown.
+          One family invoice for both children, with a clear per-child breakdown.
         </p>
       </section>
 
       {/* Invoice card */}
       <section className="mx-6 mt-6 overflow-hidden rounded-[2rem] bg-card p-6" style={{ boxShadow: "var(--shadow-soft)" }}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">Current Invoice</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">Current invoice — April 2025</p>
         <p className="mt-2 font-display text-5xl font-extrabold tracking-tight text-foreground">
           €{billing.invoice}
           <span className="text-2xl text-muted-foreground">.00</span>
@@ -44,13 +44,13 @@ function PaymentsPage() {
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold text-primary-foreground"
           style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-float)" }}
         >
-          Pay Now <ArrowRight className="h-4 w-4" />
+          Pay now <ArrowRight className="h-4 w-4" />
         </motion.button>
       </section>
 
       {/* Breakdown */}
       <section className="mt-8 px-6">
-        <h2 className="font-display text-2xl font-bold text-foreground">Tuition Breakdown</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Breakdown</h2>
         <div className="mt-4 space-y-3">
           {billing.breakdown.map((b) => (
             <div key={b.child} className="rounded-3xl bg-surface-low p-5">
@@ -75,19 +75,23 @@ function PaymentsPage() {
               </div>
             </div>
           ))}
+          <div className="flex justify-between rounded-3xl bg-primary-container p-5">
+            <span className="font-display text-base font-bold text-primary">Total due</span>
+            <span className="font-display text-xl font-extrabold text-primary">€{billing.invoice}.00</span>
+          </div>
         </div>
       </section>
 
       {/* History */}
       <section className="mx-6 mt-6 rounded-[2rem] bg-card p-5" style={{ boxShadow: "var(--shadow-soft)" }}>
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-xl font-bold text-foreground">Recent History</h2>
-          <button className="text-sm font-semibold text-primary">View All</button>
+          <h2 className="font-display text-xl font-bold text-foreground">Recent history</h2>
+          <button className="text-sm font-semibold text-primary">View all</button>
         </div>
-        <ul className="mt-4 space-y-4">
+        <ul className="mt-4 space-y-3">
           {billing.history.map((h) => (
-            <li key={h.label} className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-success/25 text-success-foreground">
+            <li key={h.id} className="flex items-center gap-3 rounded-2xl bg-surface-low p-3">
+              <span className={`flex h-9 w-9 items-center justify-center rounded-full ${h.late ? "bg-warning/25 text-warning-foreground" : "bg-success/25 text-success-foreground"}`}>
                 <Check className="h-4 w-4" />
               </span>
               <div className="min-w-0 flex-1">
@@ -95,6 +99,9 @@ function PaymentsPage() {
                 <p className="text-xs text-muted-foreground">{h.date}</p>
               </div>
               <span className="font-display text-sm font-bold text-foreground">€{h.amount}.00</span>
+              <motion.button whileTap={{ scale: 0.92 }} className="flex h-9 w-9 items-center justify-center rounded-full bg-card text-primary" aria-label="Download receipt">
+                <FileText className="h-4 w-4" />
+              </motion.button>
             </li>
           ))}
         </ul>
