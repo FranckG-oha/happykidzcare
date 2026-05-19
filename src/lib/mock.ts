@@ -57,6 +57,13 @@ export const todayTimeline = [
 ];
 
 // Per-child daily reports (today)
+export type VoiceNote = {
+  url: string;
+  duration: string;
+  transcript: string;
+  language: string;
+};
+
 export type DailyReport = {
   childId: string;
   date: string;
@@ -69,6 +76,7 @@ export type DailyReport = {
   mood: { morning: string; afternoon: string };
   activities: string[];
   note: string;
+  voiceNote?: VoiceNote;
 };
 
 export const dailyReports: Record<string, DailyReport> = {
@@ -88,6 +96,13 @@ export const dailyReports: Record<string, DailyReport> = {
     mood: { morning: "😄 Happy", afternoon: "🙂 Good" },
     activities: ["Painting", "Story time", "Outdoor play"],
     note: "Léa was very enthusiastic during painting today. She made a drawing she'll bring home.",
+    voiceNote: {
+      url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3134f5f56b.mp3",
+      duration: "0:42",
+      language: "FR → EN",
+      transcript:
+        "Bonjour, c'est Mme Johnson. Léa a passé une superbe journée — très concentrée pendant l'atelier peinture. Elle a bien mangé à midi, surtout les carottes rôties. Sieste calme d'environ 1h45. Elle vous ramène un dessin ce soir. À demain !",
+    },
   },
   noah: {
     childId: "noah",
