@@ -175,9 +175,93 @@ function TodayView({ childId }: { childId: string }) {
         <p className="mt-2 text-[11px] text-muted-foreground">— {r.by}</p>
       </Block>
 
+      {/* Voice note */}
+      {r.voiceNote && <VoiceNoteBlock note={r.voiceNote} by={r.by} />}
+
       <div className="h-4" />
     </>
   );
+}
+
+function VoiceNoteBlock({ note, by }: { note: NonNullable<ReturnType<typeof getReport>>["voiceNote"]; by: string }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showTranscript, setShowTranscript] = useState(true);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    const onTime = () => setProgress(a.duration ? (a.currentTime / a.duration) * 100 : 0);
+    const onEnd = () => { setPlaying(false); setProgress(0); };
+    a.addEventListener("timeupdate", onTime);
+    a.addEventListener("ended", onEnd);
+    return () => { a.removeEventListener("timeupdate", onTime); a.removeEventListener("ended", onEnd); };
+  }, []);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (playing) { a.pause(); setPlaying(false); } else { a.play(); setPlaying(true); }
+  };
+
+  if (!note) return null;
+
+  return (
+    <section className="mx-6 mt-3 rounded-[1.5rem] bg-primary-container/60 p-4">
+      <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+        <Mic className="h-3.5 w-3.5" /> Voice note from {by}
+      </p>
+
+      <audio ref={audioRef} src={note.url} preload="metadata" />
+
+      <div className="flex items-center gap-3 rounded-2xl bg-card p-3" style={{ boxShadow: "var(--shadow-soft)" }}>
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={toggle}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+          aria-label={playing ? "Pause" : "Play"}
+        >
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
+        </motion.button>
+        <div className="min-w-0 flex-1">
+          <div className="h-1.5 overflow-hidden rounded-full bg-primary/15">
+            <motion.div className="h-full bg-primary" animate={{ width: `${progress}%` }} transition={{ duration: 0.1 }} />
+          </div>
+          <div className="mt-1.5 flex items-center justify-between text-[10px] font-semibold text-muted-foreground">
+            <span>{note.duration}</span>
+            <span className="flex items-center gap-1"><Languages className="h-3 w-3" /> {note.language}</span>
+          </div>
+        </div>
+      </div>
+
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={() => setShowTranscript((s) => !s)}
+        className="mt-3 flex w-full items-center justify-between rounded-full bg-card/70 px-4 py-2 text-xs font-semibold text-foreground"
+      >
+        <span>{showTranscript ? "Hide transcript" : "Show transcript"}</span>
+        <ChevronRight className={`h-3.5 w-3.5 transition-transform ${showTranscript ? "rotate-90" : ""}`} />
+      </motion.button>
+
+      <AnimatePresence initial={false}>
+        {showTranscript && (
+          <motion.p
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-3 overflow-hidden text-sm leading-relaxed text-foreground"
+          >
+            {note.transcript}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
+function getReport(): import("@/lib/mock").DailyReport {
+  return {} as never;
 }
 
 function Block({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
