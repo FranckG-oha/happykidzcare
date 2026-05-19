@@ -113,6 +113,12 @@ function TodayView({ childId }: { childId: string }) {
             </Link>
           </div>
         </div>
+        <Link
+          to="/educator/report"
+          className="mt-3 flex items-center justify-center gap-1.5 rounded-full bg-surface-low px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground"
+        >
+          <Mic className="h-3 w-3" /> Educator mode · record voice report
+        </Link>
       </section>
 
       {/* Meals */}
