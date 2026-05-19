@@ -183,7 +183,7 @@ function TodayView({ childId }: { childId: string }) {
   );
 }
 
-function VoiceNoteBlock({ note, by }: { note: NonNullable<ReturnType<typeof getReport>>["voiceNote"]; by: string }) {
+function VoiceNoteBlock({ note, by }: { note: import("@/lib/mock").VoiceNote; by: string }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
