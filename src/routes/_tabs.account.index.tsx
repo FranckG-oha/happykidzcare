@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   Bell,
-  CalendarOff,
   ChevronRight,
   CreditCard,
   FileText,
@@ -12,7 +11,6 @@ import {
   LogOut,
   Pencil,
   ShieldCheck,
-  Sparkles,
   Users,
   Wallet,
 } from "lucide-react";
@@ -131,8 +129,7 @@ function AccountDashboard() {
       {/* Sub-pages — Family & Safety */}
       <Group title="Family & Safety">
         <Row to="/account/children" icon={Users} label="Linked children" hint="2 children" />
-        <Row to="/security" icon={ShieldCheck} label="Authorized pickup" hint="2 contacts" />
-        <Row to="/absence" icon={CalendarOff} label="Declare an absence" />
+        <Row to="/account/security" icon={ShieldCheck} label="Authorized pickup" hint="2 contacts" />
       </Group>
 
       {/* Sub-pages — Billing */}
@@ -145,7 +142,6 @@ function AccountDashboard() {
       <Group title="Preferences & support">
         <Row to="/account/preferences" icon={Bell} label="Notification preferences" />
         <Row to="/account/security" icon={ShieldCheck} label="Account security" />
-        <Row to="/feedback" icon={Sparkles} label="Annual feedback 2026" badge="New" />
         <Row to="/account/help" icon={HelpCircle} label="Help & support" />
       </Group>
 
