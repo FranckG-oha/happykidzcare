@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppHeader } from "@/components/AppHeader";
-import { Heart, MessageCircle, AlertTriangle, Pill, FileText, Download, ChevronRight, Activity, Camera } from "lucide-react";
+import { Heart, MessageCircle, AlertTriangle, Pill, FileText, Download, ChevronRight, Activity, Camera, Mic, Play, Pause, Languages } from "lucide-react";
 import { children, dailyReports, pastReports, healthData, gallery, evaluationList } from "@/lib/mock";
 
 export const Route = createFileRoute("/_tabs/children")({
