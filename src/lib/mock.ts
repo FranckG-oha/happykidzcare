@@ -96,22 +96,6 @@ export const dailyReports: Record<string, DailyReport> = {
     mood: { morning: "😄 Happy", afternoon: "🙂 Good" },
     activities: ["Painting", "Story time", "Outdoor play"],
     note: "Léa was very enthusiastic during painting today. She made a drawing she'll bring home.",
-  },
-  noah: {
-    childId: "noah",
-    date: "April 15",
-    sentAt: "17:05",
-    by: "M. Diallo",
-    meals: [
-      { label: "Breakfast", level: 3 },
-      { label: "Lunch", level: 4 },
-      { label: "Snack", level: 4 },
-    ],
-    nap: { start: "13:00", end: "14:00", duration: "1h", quality: "Calm rest" },
-    health: { temperature: "37.2°C", status: "Normal" },
-    mood: { morning: "🙂 Good", afternoon: "😄 Happy" },
-    activities: ["Block building", "Reading", "Garden exploration"],
-    note: "Léa was very enthusiastic during painting today. She made a drawing she'll bring home.",
     voiceNote: {
       url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3134f5f56b.mp3",
       duration: "0:42",
