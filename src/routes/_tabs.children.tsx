@@ -260,9 +260,6 @@ function VoiceNoteBlock({ note, by }: { note: import("@/lib/mock").VoiceNote; by
   );
 }
 
-function getReport(): import("@/lib/mock").DailyReport {
-  return {} as never;
-}
 
 function Block({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
   return (
