@@ -13,6 +13,7 @@ import { Route as ConversationRouteImport } from './routes/conversation'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as EvaluationIdRouteImport } from './routes/evaluation.$id'
+import { Route as EducatorReportRouteImport } from './routes/educator.report'
 import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
 import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
 import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
@@ -43,6 +44,11 @@ const TabsIndexRoute = TabsIndexRouteImport.update({
 const EvaluationIdRoute = EvaluationIdRouteImport.update({
   id: '/evaluation/$id',
   path: '/evaluation/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EducatorReportRoute = EducatorReportRouteImport.update({
+  id: '/educator/report',
+  path: '/educator/report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TabsUpdatesRoute = TabsUpdatesRouteImport.update({
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
   '/updates': typeof TabsUpdatesRoute
+  '/educator/report': typeof EducatorReportRoute
   '/evaluation/$id': typeof EvaluationIdRoute
   '/account/children': typeof TabsAccountChildrenRoute
   '/account/help': typeof TabsAccountHelpRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
   '/updates': typeof TabsUpdatesRoute
+  '/educator/report': typeof EducatorReportRoute
   '/evaluation/$id': typeof EvaluationIdRoute
   '/': typeof TabsIndexRoute
   '/account/children': typeof TabsAccountChildrenRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/_tabs/children': typeof TabsChildrenRoute
   '/_tabs/messages': typeof TabsMessagesRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
+  '/educator/report': typeof EducatorReportRoute
   '/evaluation/$id': typeof EvaluationIdRoute
   '/_tabs/': typeof TabsIndexRoute
   '/_tabs/account/children': typeof TabsAccountChildrenRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/children'
     | '/messages'
     | '/updates'
+    | '/educator/report'
     | '/evaluation/$id'
     | '/account/children'
     | '/account/help'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/children'
     | '/messages'
     | '/updates'
+    | '/educator/report'
     | '/evaluation/$id'
     | '/'
     | '/account/children'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/_tabs/children'
     | '/_tabs/messages'
     | '/_tabs/updates'
+    | '/educator/report'
     | '/evaluation/$id'
     | '/_tabs/'
     | '/_tabs/account/children'
@@ -215,6 +227,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   ConversationRoute: typeof ConversationRoute
+  EducatorReportRoute: typeof EducatorReportRoute
   EvaluationIdRoute: typeof EvaluationIdRoute
 }
 
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/evaluation/$id'
       fullPath: '/evaluation/$id'
       preLoaderRoute: typeof EvaluationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/educator/report': {
+      id: '/educator/report'
+      path: '/educator/report'
+      fullPath: '/educator/report'
+      preLoaderRoute: typeof EducatorReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_tabs/updates': {
@@ -382,8 +402,19 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   ConversationRoute: ConversationRoute,
+  EducatorReportRoute: EducatorReportRoute,
   EvaluationIdRoute: EvaluationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
