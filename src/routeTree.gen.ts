@@ -14,14 +14,10 @@ import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as EvaluationIdRouteImport } from './routes/evaluation.$id'
 import { Route as TabsUpdatesRouteImport } from './routes/_tabs.updates'
-import { Route as TabsSecurityRouteImport } from './routes/_tabs.security'
-import { Route as TabsNotificationsRouteImport } from './routes/_tabs.notifications'
 import { Route as TabsMessagesRouteImport } from './routes/_tabs.messages'
-import { Route as TabsFeedbackRouteImport } from './routes/_tabs.feedback'
 import { Route as TabsChildrenRouteImport } from './routes/_tabs.children'
 import { Route as TabsCalendarRouteImport } from './routes/_tabs.calendar'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
-import { Route as TabsAbsenceRouteImport } from './routes/_tabs.absence'
 import { Route as TabsAccountIndexRouteImport } from './routes/_tabs.account.index'
 import { Route as TabsAccountSecurityRouteImport } from './routes/_tabs.account.security'
 import { Route as TabsAccountProfileRouteImport } from './routes/_tabs.account.profile'
@@ -54,24 +50,9 @@ const TabsUpdatesRoute = TabsUpdatesRouteImport.update({
   path: '/updates',
   getParentRoute: () => TabsRoute,
 } as any)
-const TabsSecurityRoute = TabsSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
-  getParentRoute: () => TabsRoute,
-} as any)
-const TabsNotificationsRoute = TabsNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => TabsRoute,
-} as any)
 const TabsMessagesRoute = TabsMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
-  getParentRoute: () => TabsRoute,
-} as any)
-const TabsFeedbackRoute = TabsFeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
   getParentRoute: () => TabsRoute,
 } as any)
 const TabsChildrenRoute = TabsChildrenRouteImport.update({
@@ -87,11 +68,6 @@ const TabsCalendarRoute = TabsCalendarRouteImport.update({
 const TabsAccountRoute = TabsAccountRouteImport.update({
   id: '/account',
   path: '/account',
-  getParentRoute: () => TabsRoute,
-} as any)
-const TabsAbsenceRoute = TabsAbsenceRouteImport.update({
-  id: '/absence',
-  path: '/absence',
   getParentRoute: () => TabsRoute,
 } as any)
 const TabsAccountIndexRoute = TabsAccountIndexRouteImport.update({
@@ -133,14 +109,10 @@ const TabsAccountChildrenRoute = TabsAccountChildrenRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/conversation': typeof ConversationRoute
-  '/absence': typeof TabsAbsenceRoute
   '/account': typeof TabsAccountRouteWithChildren
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
-  '/feedback': typeof TabsFeedbackRoute
   '/messages': typeof TabsMessagesRoute
-  '/notifications': typeof TabsNotificationsRoute
-  '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
   '/evaluation/$id': typeof EvaluationIdRoute
   '/account/children': typeof TabsAccountChildrenRoute
@@ -153,13 +125,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/conversation': typeof ConversationRoute
-  '/absence': typeof TabsAbsenceRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
-  '/feedback': typeof TabsFeedbackRoute
   '/messages': typeof TabsMessagesRoute
-  '/notifications': typeof TabsNotificationsRoute
-  '/security': typeof TabsSecurityRoute
   '/updates': typeof TabsUpdatesRoute
   '/evaluation/$id': typeof EvaluationIdRoute
   '/': typeof TabsIndexRoute
@@ -175,14 +143,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
   '/conversation': typeof ConversationRoute
-  '/_tabs/absence': typeof TabsAbsenceRoute
   '/_tabs/account': typeof TabsAccountRouteWithChildren
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
-  '/_tabs/feedback': typeof TabsFeedbackRoute
   '/_tabs/messages': typeof TabsMessagesRoute
-  '/_tabs/notifications': typeof TabsNotificationsRoute
-  '/_tabs/security': typeof TabsSecurityRoute
   '/_tabs/updates': typeof TabsUpdatesRoute
   '/evaluation/$id': typeof EvaluationIdRoute
   '/_tabs/': typeof TabsIndexRoute
@@ -199,14 +163,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/conversation'
-    | '/absence'
     | '/account'
     | '/calendar'
     | '/children'
-    | '/feedback'
     | '/messages'
-    | '/notifications'
-    | '/security'
     | '/updates'
     | '/evaluation/$id'
     | '/account/children'
@@ -219,13 +179,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/conversation'
-    | '/absence'
     | '/calendar'
     | '/children'
-    | '/feedback'
     | '/messages'
-    | '/notifications'
-    | '/security'
     | '/updates'
     | '/evaluation/$id'
     | '/'
@@ -240,14 +196,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_tabs'
     | '/conversation'
-    | '/_tabs/absence'
     | '/_tabs/account'
     | '/_tabs/calendar'
     | '/_tabs/children'
-    | '/_tabs/feedback'
     | '/_tabs/messages'
-    | '/_tabs/notifications'
-    | '/_tabs/security'
     | '/_tabs/updates'
     | '/evaluation/$id'
     | '/_tabs/'
@@ -303,32 +255,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsUpdatesRouteImport
       parentRoute: typeof TabsRoute
     }
-    '/_tabs/security': {
-      id: '/_tabs/security'
-      path: '/security'
-      fullPath: '/security'
-      preLoaderRoute: typeof TabsSecurityRouteImport
-      parentRoute: typeof TabsRoute
-    }
-    '/_tabs/notifications': {
-      id: '/_tabs/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof TabsNotificationsRouteImport
-      parentRoute: typeof TabsRoute
-    }
     '/_tabs/messages': {
       id: '/_tabs/messages'
       path: '/messages'
       fullPath: '/messages'
       preLoaderRoute: typeof TabsMessagesRouteImport
-      parentRoute: typeof TabsRoute
-    }
-    '/_tabs/feedback': {
-      id: '/_tabs/feedback'
-      path: '/feedback'
-      fullPath: '/feedback'
-      preLoaderRoute: typeof TabsFeedbackRouteImport
       parentRoute: typeof TabsRoute
     }
     '/_tabs/children': {
@@ -350,13 +281,6 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof TabsAccountRouteImport
-      parentRoute: typeof TabsRoute
-    }
-    '/_tabs/absence': {
-      id: '/_tabs/absence'
-      path: '/absence'
-      fullPath: '/absence'
-      preLoaderRoute: typeof TabsAbsenceRouteImport
       parentRoute: typeof TabsRoute
     }
     '/_tabs/account/': {
@@ -436,27 +360,19 @@ const TabsAccountRouteWithChildren = TabsAccountRoute._addFileChildren(
 )
 
 interface TabsRouteChildren {
-  TabsAbsenceRoute: typeof TabsAbsenceRoute
   TabsAccountRoute: typeof TabsAccountRouteWithChildren
   TabsCalendarRoute: typeof TabsCalendarRoute
   TabsChildrenRoute: typeof TabsChildrenRoute
-  TabsFeedbackRoute: typeof TabsFeedbackRoute
   TabsMessagesRoute: typeof TabsMessagesRoute
-  TabsNotificationsRoute: typeof TabsNotificationsRoute
-  TabsSecurityRoute: typeof TabsSecurityRoute
   TabsUpdatesRoute: typeof TabsUpdatesRoute
   TabsIndexRoute: typeof TabsIndexRoute
 }
 
 const TabsRouteChildren: TabsRouteChildren = {
-  TabsAbsenceRoute: TabsAbsenceRoute,
   TabsAccountRoute: TabsAccountRouteWithChildren,
   TabsCalendarRoute: TabsCalendarRoute,
   TabsChildrenRoute: TabsChildrenRoute,
-  TabsFeedbackRoute: TabsFeedbackRoute,
   TabsMessagesRoute: TabsMessagesRoute,
-  TabsNotificationsRoute: TabsNotificationsRoute,
-  TabsSecurityRoute: TabsSecurityRoute,
   TabsUpdatesRoute: TabsUpdatesRoute,
   TabsIndexRoute: TabsIndexRoute,
 }

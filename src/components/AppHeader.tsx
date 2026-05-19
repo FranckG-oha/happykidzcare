@@ -44,7 +44,7 @@ export function AppHeader({ action = "search" as "search" | "bell", badge = 3 }:
           </motion.span>
         </Link>
         <Link
-          to="/notifications"
+          to="/updates"
           className="relative flex h-10 w-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface-low"
           aria-label={action}
         >
