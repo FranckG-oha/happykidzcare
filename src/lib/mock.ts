@@ -57,6 +57,13 @@ export const todayTimeline = [
 ];
 
 // Per-child daily reports (today)
+export type VoiceNote = {
+  url: string;
+  duration: string;
+  transcript: string;
+  language: string;
+};
+
 export type DailyReport = {
   childId: string;
   date: string;
@@ -69,6 +76,7 @@ export type DailyReport = {
   mood: { morning: string; afternoon: string };
   activities: string[];
   note: string;
+  voiceNote?: VoiceNote;
 };
 
 export const dailyReports: Record<string, DailyReport> = {
