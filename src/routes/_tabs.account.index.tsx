@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   Bell,
-  CalendarOff,
   ChevronRight,
   CreditCard,
   FileText,
@@ -12,7 +11,6 @@ import {
   LogOut,
   Pencil,
   ShieldCheck,
-  Sparkles,
   Users,
   Wallet,
 } from "lucide-react";
