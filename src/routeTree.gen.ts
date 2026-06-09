@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DirectionRouteImport } from './routes/direction'
 import { Route as ConversationRouteImport } from './routes/conversation'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
@@ -27,6 +28,11 @@ import { Route as TabsAccountPaymentsRouteImport } from './routes/_tabs.account.
 import { Route as TabsAccountHelpRouteImport } from './routes/_tabs.account.help'
 import { Route as TabsAccountChildrenRouteImport } from './routes/_tabs.account.children'
 
+const DirectionRoute = DirectionRouteImport.update({
+  id: '/direction',
+  path: '/direction',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConversationRoute = ConversationRouteImport.update({
   id: '/conversation',
   path: '/conversation',
@@ -115,6 +121,7 @@ const TabsAccountChildrenRoute = TabsAccountChildrenRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/conversation': typeof ConversationRoute
+  '/direction': typeof DirectionRoute
   '/account': typeof TabsAccountRouteWithChildren
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/conversation': typeof ConversationRoute
+  '/direction': typeof DirectionRoute
   '/calendar': typeof TabsCalendarRoute
   '/children': typeof TabsChildrenRoute
   '/messages': typeof TabsMessagesRoute
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
   '/conversation': typeof ConversationRoute
+  '/direction': typeof DirectionRoute
   '/_tabs/account': typeof TabsAccountRouteWithChildren
   '/_tabs/calendar': typeof TabsCalendarRoute
   '/_tabs/children': typeof TabsChildrenRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/conversation'
+    | '/direction'
     | '/account'
     | '/calendar'
     | '/children'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/conversation'
+    | '/direction'
     | '/calendar'
     | '/children'
     | '/messages'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_tabs'
     | '/conversation'
+    | '/direction'
     | '/_tabs/account'
     | '/_tabs/calendar'
     | '/_tabs/children'
@@ -227,12 +239,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   ConversationRoute: typeof ConversationRoute
+  DirectionRoute: typeof DirectionRoute
   EducatorReportRoute: typeof EducatorReportRoute
   EvaluationIdRoute: typeof EvaluationIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/direction': {
+      id: '/direction'
+      path: '/direction'
+      fullPath: '/direction'
+      preLoaderRoute: typeof DirectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conversation': {
       id: '/conversation'
       path: '/conversation'
@@ -402,19 +422,10 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   ConversationRoute: ConversationRoute,
+  DirectionRoute: DirectionRoute,
   EducatorReportRoute: EducatorReportRoute,
   EvaluationIdRoute: EvaluationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
