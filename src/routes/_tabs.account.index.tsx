@@ -145,6 +145,43 @@ function AccountDashboard() {
         <Row to="/account/help" icon={HelpCircle} label="Help & support" />
       </Group>
 
+      {/* Demo: alternate interfaces */}
+      <section className="mt-7 px-6">
+        <h2 className="mb-3 px-1 text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Demo · other roles</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <motion.div whileTap={{ scale: 0.97 }}>
+            <Link
+              to="/educator/report"
+              className="block rounded-2xl bg-card p-4"
+              style={{ boxShadow: "var(--shadow-soft)" }}
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary/15 text-secondary">
+                <Pencil className="h-4 w-4" />
+              </span>
+              <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Educator</p>
+              <p className="mt-1 font-display text-base font-extrabold text-foreground">Voice report</p>
+              <p className="text-[11px] text-muted-foreground">Record & transcribe</p>
+            </Link>
+          </motion.div>
+          <motion.div whileTap={{ scale: 0.97 }}>
+            <Link
+              to="/direction"
+              className="block rounded-2xl bg-card p-4"
+              style={{ boxShadow: "var(--shadow-soft)" }}
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <ShieldCheck className="h-4 w-4" />
+              </span>
+              <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Direction</p>
+              <p className="mt-1 font-display text-base font-extrabold text-foreground">Cockpit</p>
+              <p className="text-[11px] text-muted-foreground">Staff · parents · budget</p>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+
+
       {/* Sign out */}
       <section className="px-6 pt-4">
         <motion.button
